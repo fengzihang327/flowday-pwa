@@ -1,0 +1,56 @@
+{
+  "name": "Flowday 时间规划",
+  "short_name": "Flowday",
+  "description": "简易高效的每日时间规划工具，支持任务提醒与小组件",
+  "lang": "zh-CN",
+  "start_url": "./time-planner.html",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#101112",
+  "theme_color": "#101112",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "添加任务",
+      "short_name": "添加",
+      "description": "快速添加一项新任务",
+      "url": "./time-planner.html?action=add",
+      "icons": [{ "src": "flowday-icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "今天计划",
+      "short_name": "今天",
+      "description": "查看今天的计划",
+      "url": "./time-planner.html",
+      "icons": [{ "src": "flowday-icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "小组件视图",
+      "short_name": "小组件",
+      "description": "紧凑任务概览",
+      "url": "./widget.html",
+      "icons": [{ "src": "flowday-icon.svg", "sizes": "any" }]
+    }
+  ],
+  "widgets": [
+    {
+      "name": "Flowday 今日概览",
+      "description": "显示今天的任务和完成进度",
+      "tag": "flowday-widget",
+      "template": "widget.html",
+      "ms_ac_template": "widget.html"
+    }
+  ],
+  "icons": [
+    {
+      "src": "flowday-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false,
+  "related_applications": []
+}

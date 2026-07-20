@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#101112">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="flowday.webmanifest">
+  <link rel="icon" href="flowday-icon.svg" type="image/svg+xml">
+  <title>Flowday · 时间规划</title>
+  <style>
+    :root{--ink:#151718;--muted:#7c817f;--line:#e8ebe7;--cream:#f7f8f5;--paper:#fff;--lime:#d9f75b;--orange:#ff7657;--blue:#c9e8ff;--red:#ff4757;--shadow:0 20px 60px rgba(28,35,29,.08)}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+    body{margin:0;background:#eef1ed;color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+    button,input,textarea{font:inherit}button{cursor:pointer;border:0;color:inherit;touch-action:manipulation}
+    .shell{max-width:1160px;margin:auto;min-height:100vh;background:var(--cream);box-shadow:var(--shadow);overflow:hidden}
+    .topbar{height:76px;padding:0 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(247,248,245,.92);position:sticky;top:0;z-index:5;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.04em;font-size:21px}
+    .mark{width:28px;height:28px;border-radius:9px 9px 9px 3px;background:var(--lime);display:grid;place-items:center;font-size:15px;transform:rotate(-8deg)}
+    .top-actions{display:flex;align-items:center;gap:12px}
+    .icon-btn{width:40px;height:40px;border-radius:50%;background:var(--paper);border:1px solid var(--line);font-size:17px;position:relative}
+    .icon-btn .badge{position:absolute;top:-4px;right:-4px;width:8px;height:8px;border-radius:50%;background:var(--orange)}
+    .avatar{width:40px;height:40px;border-radius:50%;background:#f1b58d;display:grid;place-items:center;font-size:14px;font-weight:700}
+    .layout{display:grid;grid-template-columns:1.05fr 1.55fr;gap:28px;padding:36px 32px 48px}
+    .eyebrow{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+    .hero h1{font-size:45px;line-height:1.05;letter-spacing:-.07em;margin:12px 0 13px;max-width:410px}
+    .hero-copy{color:var(--muted);line-height:1.7;font-size:14px;max-width:370px;margin:0}
+    .date-row{display:flex;align-items:center;justify-content:space-between;margin-top:32px;gap:10px}
+    .date-row h2{font-size:18px;letter-spacing:-.04em;margin:0}
+    .date-controls{display:flex;align-items:center;gap:6px}
+    .today{font-size:12px;font-weight:700;padding:8px 13px;background:var(--lime);border-radius:99px}
+    .week-nav{width:29px;height:29px;border-radius:50%;background:var(--paper);border:1px solid var(--line);font-size:18px;line-height:1}
+    .date-picker{border:1px solid var(--line);border-radius:9px;padding:6px 8px;background:white;color:var(--ink);font-size:11px}
+    .week{display:flex;gap:9px;margin-top:16px}
+    .day{background:var(--paper);border:1px solid var(--line);border-radius:14px;width:44px;height:61px;padding:9px 0 7px;text-align:center;color:var(--muted);font-size:10px}
+    .day b{display:block;font-size:16px;color:var(--ink);margin-top:5px}
+    .day.active{background:var(--ink);border-color:var(--ink);color:#b7bdba}
+    .day.active b{color:var(--lime)}
+    .summary{margin-top:34px;background:var(--ink);color:white;border-radius:23px;padding:23px 24px;position:relative;overflow:hidden}
+    .summary:after{content:"";width:135px;height:135px;border-radius:50%;border:24px solid rgba(217,247,91,.13);position:absolute;right:-35px;top:-42px}
+    .summary-head{display:flex;justify-content:space-between;align-items:start}
+    .summary h3{margin:0;font-size:16px;letter-spacing:-.03em}
+    .summary small{color:#9da49f;font-size:11px}
+    .score{display:flex;align-items:center;gap:17px;margin-top:22px}
+    .progress-ring{width:72px;height:72px;border-radius:50%;background:conic-gradient(var(--lime) 0 68%,#3d4341 68% 100%);display:grid;place-items:center;position:relative}
+    .progress-ring:after{content:"";width:53px;height:53px;border-radius:50%;background:var(--ink);position:absolute}
+    .progress-ring strong{z-index:1;font-size:17px}
+    .score p{margin:0;color:#b6bcb8;font-size:12px;line-height:1.65}
+    .score p b{display:block;color:white;font-size:22px;line-height:1.1;letter-spacing:-.05em}
+    .main-card{background:var(--paper);border:1px solid var(--line);border-radius:25px;padding:24px;box-shadow:0 9px 30px rgba(38,49,39,.04)}
+    .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+    .card-head h2{font-size:20px;margin:0;letter-spacing:-.05em}
+    .count{color:var(--muted);font-size:12px}
+    .task-list{display:flex;flex-direction:column;gap:11px}
+    .task{display:grid;grid-template-columns:25px 1fr auto;align-items:center;gap:12px;padding:14px 13px;border:1px solid var(--line);border-radius:16px;transition:.2s;background:#fff;position:relative;overflow:hidden}
+    .task:hover{border-color:#bbc4b5;transform:translateY(-1px)}
+    .task.done{background:#fafbf8}
+    /* Long-press delete states */
+    .task.deleting{background:#fff5f5;border-color:#ffc9c9;transform:scale(.97)}
+    .task .delete-hint{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--red);color:white;display:none;align-items:center;justify-content:center;font-size:16px;z-index:2;animation:popIn .2s ease}
+    .task.deleting .delete-hint{display:flex}
+    .task .swipe-bg{position:absolute;inset:0;background:var(--red);display:flex;align-items:center;justify-content:flex-end;padding-right:20px;color:white;font-size:13px;font-weight:700;opacity:0;transition:opacity .15s;pointer-events:none;border-radius:16px}
+    .task.swiped .swipe-bg{opacity:1}
+    @keyframes popIn{0%{transform:translateY(-50%) scale(0)}70%{transform:translateY(-50%) scale(1.15)}100%{transform:translateY(-50%) scale(1)}}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+    .task.deleting{animation:shake .3s ease}
+    .check{width:22px;height:22px;border-radius:50%;border:1.5px solid #afb8b0;background:white;display:grid;place-items:center;font-size:13px;color:var(--ink);flex-shrink:0}
+    .task.done .check{background:var(--lime);border-color:var(--lime)}
+    .task.done .task-title{text-decoration:line-through;color:#9da39e}
+    .task-title{font-size:13px;font-weight:700;line-height:1.3}
+    .task-meta{font-size:11px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .task-location{display:inline-flex;align-items:center;gap:3px;color:#6c736d;background:#f2f4f0;padding:2px 7px;border-radius:4px;font-size:10px}
+    .tag{font-size:10px;padding:5px 8px;border-radius:6px;background:#f2f4f0;color:#6c736d;white-space:nowrap}
+    .tag.focus{background:#fff0eb;color:#d85d42}
+    .tag.health{background:#e8f5ff;color:#4584ad}
+    .tag.life{background:#f3edff;color:#8662a8}
+    .tag.work{background:#e6f7ec;color:#3d7a52}
+    .task.done .tag{opacity:.55}
+    .empty-state{padding:26px 14px;text-align:center;border:1px dashed #d8ddd6;border-radius:16px;color:var(--muted);font-size:12px;line-height:1.65}
+    /* Add task area */
+    .add-section{margin-top:16px}
+    .add-row{display:flex;gap:10px}
+    .add-input{min-width:0;flex:1;border:1px solid var(--line);border-radius:13px;padding:12px 13px;outline:0;background:var(--cream);font-size:13px;-webkit-user-select:text;user-select:text}
+    .add-input:focus{border-color:#bdce70;background:white}
+    .primary{background:var(--ink);color:white;border-radius:13px;padding:0 16px;font-weight:700;font-size:12px;white-space:nowrap}
+    .primary:active{opacity:.85}
+    /* Quick time selector */
+    .quick-options{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+    .quick-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-right:2px}
+    .time-chip{font-size:11px;padding:6px 11px;border-radius:99px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-weight:600;transition:.15s;white-space:nowrap}
+    .time-chip:active{transform:scale(.95)}
+    .time-chip.selected{background:var(--ink);color:var(--lime);border-color:var(--ink)}
+    .time-custom{border:1px solid var(--line);border-radius:99px;padding:6px 8px;font-size:11px;background:var(--paper);color:var(--ink);width:85px;outline:0;-webkit-user-select:text;user-select:text}
+    .time-custom:focus{border-color:#bdce70}
+    /* Location toggle */
+    .location-row{margin-top:8px;display:flex;align-items:center;gap:8px;transition:.2s}
+    .location-row.hidden{display:none}
+    .toggle-loc{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);background:none;padding:4px 0;font-weight:600}
+    .toggle-loc .toggle-dot{width:28px;height:16px;border-radius:99px;background:#d5dbd4;position:relative;transition:.2s;flex-shrink:0}
+    .toggle-loc .toggle-dot:after{content:"";width:12px;height:12px;border-radius:50%;background:white;position:absolute;top:2px;left:2px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+    .toggle-loc.on .toggle-dot{background:var(--lime)}
+    .toggle-loc.on .toggle-dot:after{left:14px}
+    .loc-input{flex:1;border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-size:12px;outline:0;background:var(--paper);-webkit-user-select:text;user-select:text;min-width:0}
+    .loc-input:focus{border-color:#bdce70}
+    /* Notification permission banner */
+    .notify-banner{display:none;align-items:center;gap:10px;padding:11px 15px;background:#fffbe6;border:1px solid #f0e68c;border-radius:12px;margin-top:12px;font-size:11px;color:#6b6400}
+    .notify-banner.show{display:flex}
+    .notify-banner button{flex-shrink:0;font-size:11px;font-weight:700;padding:6px 12px;border-radius:99px;background:var(--ink);color:var(--lime)}
+    .ai-card{margin-top:15px;border-radius:21px;padding:18px;background:linear-gradient(120deg,#e9f7b5,#e3f3c8);border:1px solid #d6e8a0}
+    .ai-top{display:flex;justify-content:space-between;align-items:center}
+    .ai-title{display:flex;gap:8px;align-items:center;font-weight:800;font-size:13px}
+    .spark{width:24px;height:24px;background:var(--ink);color:var(--lime);border-radius:8px;display:grid;place-items:center}
+    .ai-card p{font-size:12px;line-height:1.65;margin:13px 0;color:#59634f}
+    .ai-link{font-size:11px;font-weight:800;background:none;padding:0;text-decoration:underline;text-underline-offset:3px}
+    /* Modal */
+    .modal{position:fixed;inset:0;background:rgba(20,24,22,.45);display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:10}
+    .modal.show{display:flex}
+    .modal-box{background:var(--paper);border-radius:24px;padding:24px;width:min(520px,100%);box-shadow:0 20px 80px rgba(0,0,0,.2);max-height:85vh;overflow-y:auto}
+    .modal-box h2{margin:0 0 8px;letter-spacing:-.05em;font-size:21px}
+    .modal-box p{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 16px}
+    .import-area{width:100%;height:150px;resize:none;border:1px solid var(--line);border-radius:14px;padding:13px;line-height:1.7;font-size:12px;outline:0;background:var(--cream);-webkit-user-select:text;user-select:text}
+    .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
+    .secondary{background:var(--cream);border:1px solid var(--line);padding:11px 15px;border-radius:12px;font-size:12px;font-weight:700}
+    /* Delete confirm dialog */
+    .confirm-overlay{position:fixed;inset:0;background:rgba(20,24,22,.5);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+    .confirm-overlay.show{display:flex}
+    .confirm-card{background:var(--paper);border-radius:20px;padding:24px;text-align:center;max-width:300px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+    .confirm-card h3{margin:0 0 8px;font-size:17px;letter-spacing:-.04em}
+    .confirm-card p{font-size:12px;color:var(--muted);margin:0 0 20px;line-height:1.5}
+    .confirm-actions{display:flex;gap:10px;justify-content:center}
+    .btn-danger{background:var(--red);color:white;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:700}
+    .btn-ghost{background:var(--cream);border:1px solid var(--line);padding:10px 20px;border-radius:12px;font-size:13px;font-weight:700}
+    /* Toast */
+    .toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:white;padding:11px 18px;border-radius:99px;font-size:12px;transition:.25s;z-index:30;pointer-events:none;white-space:nowrap}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    /* Responsive */
+    @media(max-width:760px){.topbar{height:68px;padding:0 18px}.layout{display:block;padding:27px 18px 38px}.hero h1{font-size:38px;max-width:320px}.hero-copy{font-size:13px}.date-row{align-items:flex-start;flex-direction:column}.date-controls{width:100%;justify-content:space-between}.date-picker{flex:1;max-width:160px}.week{gap:6px}.day{flex:1;width:auto}.summary{margin-top:25px;margin-bottom:25px}.main-card{padding:18px;border-radius:21px}.task{grid-template-columns:24px 1fr}.tag{grid-column:2;justify-self:start;margin-top:-5px}.add-row{margin-top:0}.add-input{font-size:12px}.primary{padding:0 13px}.quick-options{gap:5px}.time-chip{font-size:10px;padding:5px 9px}.modal{padding:10px}.modal-box{padding:21px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar"><div class="brand"><span class="mark">✦</span> flowday</div><div class="top-actions"><button class="icon-btn" id="notifyBtn" aria-label="通知设置">🔔<span class="badge" id="notifyBadge" style="display:none"></span></button><button class="icon-btn" id="importBtn" aria-label="导入任务">↥</button><div class="avatar">我</div></div></header>
+    <div class="layout">
+      <section class="hero">
+        <div class="eyebrow" id="fullDate"></div>
+        <h1>把今天，过成你想要的样子。</h1>
+        <p class="hero-copy">少一点杂乱，多一点专注。把重要的事放进清晰的节奏里。</p>
+        <div class="date-row"><h2>本周计划</h2><div class="date-controls"><button class="week-nav" id="previousWeek" aria-label="上一周">‹</button><input class="date-picker" id="datePicker" type="date" aria-label="选择日期"><button class="week-nav" id="nextWeek" aria-label="下一周">›</button><button class="today" id="todayBtn">今天</button></div></div>
+        <div class="week" id="week"></div>
+        <div class="summary"><div class="summary-head"><h3 id="summaryTitle">今日完成度</h3><small id="summaryDate"></small></div><div class="score"><div class="progress-ring" id="progressRing"><strong id="percent">0%</strong></div><p><b id="doneText">0 / 0</b>完成了计划<br><span id="summaryMessage">开始安排今天最重要的一件事。</span></p></div></div>
+      </section>
+      <section>
+        <div class="main-card">
+          <div class="card-head"><h2 id="taskHeading">今天的安排</h2><span class="count" id="taskCount">0 项任务</span></div>
+          <div class="task-list" id="taskList"></div>
+          <div class="add-section">
+            <div class="add-row">
+              <input class="add-input" id="taskInput" placeholder="添加一件小事…" maxlength="50" autocomplete="off">
+              <button class="primary" id="addBtn">添加任务</button>
+            </div>
+            <!-- Quick time selector -->
+            <div class="quick-options" id="quickTime">
+              <span class="quick-label">⏱ 时间</span>
+              <button class="time-chip" data-time="08:00">08:00</button>
+              <button class="time-chip" data-time="09:00">09:00</button>
+              <button class="time-chip" data-time="10:00">10:00</button>
+              <button class="time-chip" data-time="12:00">12:00</button>
+              <button class="time-chip" data-time="14:00">14:00</button>
+              <button class="time-chip" data-time="16:00">16:00</button>
+              <button class="time-chip" data-time="18:00">18:00</button>
+              <button class="time-chip" data-time="20:00">20:00</button>
+              <input class="time-custom" id="customTime" type="time" placeholder="自定义">
+            </div>
+            <!-- Location toggle -->
+            <button class="toggle-loc" id="toggleLoc">
+              <span class="toggle-dot"></span>📍 添加地点
+            </button>
+            <div class="location-row hidden" id="locationRow">
+              <input class="loc-input" id="locInput" placeholder="输入地点，如：会议室A、家里、咖啡店…" maxlength="30" autocomplete="off">
+            </div>
+            <!-- Notification permission banner -->
+            <div class="notify-banner" id="notifyBanner">
+              <span>🔔 开启通知，Flowday 会在任务时间提醒你</span>
+              <button id="enableNotify">开启</button>
+            </div>
+          </div>
+        </div>
+        <div class="ai-card"><div class="ai-top"><div class="ai-title"><span class="spark">✦</span> AI 今日洞察</div><span class="eyebrow" style="color:#748252">FLOW AI</span></div><p id="aiText">你上午的专注力表现很好。下午有两项高认知任务，建议先完成产品方案，再处理低强度的邮件回复。</p><button class="ai-link" id="refreshAi">重新分析我的计划 →</button></div>
+      </section>
+    </div>
+  </main>
+  <!-- Import modal -->
+  <div class="modal" id="modal"><div class="modal-box"><h2>导入任务</h2><p>每行输入一项任务，也可以粘贴从备忘录、日历或其他 App 复制的清单。</p><textarea class="import-area" id="importArea" placeholder="例：&#10;完成季度复盘&#10;预约牙医&#10;读 20 页书"></textarea><div class="modal-actions"><button class="secondary" id="cancelImport">取消</button><button class="primary" id="confirmImport" style="padding:11px 15px">导入清单</button></div></div></div>
+  <!-- Delete confirmation -->
+  <div class="confirm-overlay" id="confirmOverlay"><div class="confirm-card"><h3>删除任务</h3><p id="confirmText">确定要删除「」吗？</p><div class="confirm-actions"><button class="btn-ghost" id="cancelDelete">取消</button><button class="btn-danger" id="confirmDelete">删除</button></div></div></div>
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ── Data ────────────────────────────────────────────
+    const starterTasks=[
+      {title:'完成产品方案初稿',time:'09:00 — 10:30',location:'',tag:'专注',kind:'focus',done:true,notify:false},
+      {title:'回复重要邮件',time:'11:00 — 11:30',location:'办公室',tag:'工作',kind:'work',done:true,notify:false},
+      {title:'午间散步 20 分钟',time:'12:30 — 13:00',location:'小区公园',tag:'健康',kind:'health',done:true,notify:false},
+      {title:'整理项目反馈与待办',time:'14:00 — 15:00',location:'',tag:'工作',kind:'work',done:false,notify:false},
+      {title:'阅读《思考，快与慢》',time:'21:00 — 21:30',location:'书房',tag:'成长',kind:'focus',done:false,notify:false}
+    ];
+
+    const $ = id => document.getElementById(id);
+    const weekdays = ['日','一','二','三','四','五','六'];
+    const dateKey = date => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    const parseDate = key => {const [y,m,d]=key.split('-').map(Number);return new Date(y,m-1,d)};
+    const addDays = (date,days) => {const n=new Date(date);n.setDate(n.getDate()+days);return n};
+    const todayKey = dateKey(new Date());
+    let selectedKey = todayKey;
+    let selectedTime = '';
+    let locationEnabled = false;
+    let plans = JSON.parse(localStorage.getItem('flowday-plans') || '{}');
+    const legacyTasks = JSON.parse(localStorage.getItem('flowday-tasks') || 'null');
+    if (legacyTasks && !plans[todayKey]) plans[todayKey] = legacyTasks;
+    if (!Object.keys(plans).length) plans[todayKey] = starterTasks;
+    const savePlans = () => localStorage.setItem('flowday-plans', JSON.stringify(plans));
+    const tasksForSelected = () => plans[selectedKey] || [];
+    const isToday = () => selectedKey === todayKey;
+    const dateLabel = key => parseDate(key).toLocaleDateString('zh-CN',{month:'long',day:'numeric'});
+    const fullDateLabel = key => {const d=parseDate(key);return `星期${weekdays[d.getDay()]} · ${d.getFullYear()} / ${String(d.getMonth()+1).padStart(2,'0')} / ${String(d.getDate()).padStart(2,'0')}`};
+
+    // ── Notification ────────────────────────────────────
+    let notifyPermission = 'default';
+
+    function checkNotifyPermission() {
+      if ('Notification' in window) {
+        notifyPermission = Notification.permission;
+      }
+      updateNotifyUI();
+    }
+
+    function updateNotifyUI() {
+      const banner = $('notifyBanner');
+      const badge = $('notifyBadge');
+      if (notifyPermission === 'default') {
+        banner.classList.add('show');
+        badge.style.display = 'none';
+      } else if (notifyPermission === 'granted') {
+        banner.classList.remove('show');
+        badge.style.display = 'block';
+      } else {
+        banner.classList.remove('show');
+        badge.style.display = 'none';
+      }
+    }
+
+    async function requestNotification() {
+      if (!('Notification' in window)) {
+        showToast('此设备不支持通知功能');
+        return;
+      }
+      try {
+        const result = await Notification.requestPermission();
+        notifyPermission = result;
+        updateNotifyUI();
+        if (result === 'granted') {
+          showToast('✅ 通知已开启，任务到时间会提醒你');
+          scheduleAllNotifications();
+        } else {
+          showToast('通知未开启，可稍后在设置中打开');
+        }
+      } catch (e) {
+        showToast('通知权限请求失败');
+      }
+    }
+
+    function scheduleAllNotifications() {
+      if (notifyPermission !== 'granted') return;
+      const tasks = tasksForSelected();
+      // Schedule notifications for tasks with specific times on today
+      tasks.forEach((task, index) => {
+        if (task.done || !task.time || task.time === '待安排') return;
+        const timeMatch = task.time.match(/(\d{1,2}):(\d{2})/);
+        if (!timeMatch) return;
+        const [_, h, m] = timeMatch;
+        const now = new Date();
+        const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m), 0);
+        // Notify 5 minutes before
+        const notifyTime = target.getTime() - 5 * 60 * 1000;
+        const delay = notifyTime - now.getTime();
+        if (delay > 0 && delay < 24 * 60 * 60 * 1000) {
+          setTimeout(() => {
+            showTaskNotification(task);
+          }, delay);
+        }
+      });
+    }
+
+    function showTaskNotification(task) {
+      if (notifyPermission !== 'granted') return;
+      const title = '⏰ ' + task.title;
+      const options = {
+        body: task.location ? `📍 ${task.location} · ${task.time}` : `🕐 ${task.time}`,
+        icon: 'flowday-icon.svg',
+        badge: 'flowday-icon.svg',
+        tag: 'flowday-task',
+        vibrate: [200, 100, 200],
+        requireInteraction: true,
+        silent: false
+      };
+      try {
+        const n = new Notification(title, options);
+        n.onclick = () => {
+          n.close();
+          window.focus();
+        };
+      } catch (e) {
+        // Fallback: post to service worker
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: 'showNotification',
+            title, options
+          });
+        }
+      }
+    }
+
+    // ── Long-press delete ──────────────────────────────
+    let longPressTimer = null;
+    let longPressTarget = null;
+    let deleteIndex = null;
+
+    function attachLongPress(taskEl, index) {
+      taskEl.addEventListener('pointerdown', e => {
+        if (e.target.closest('.check')) return; // Don't trigger on check button
+        longPressTarget = taskEl;
+        deleteIndex = index;
+        longPressTimer = setTimeout(() => {
+          taskEl.classList.add('deleting');
+          if (navigator.vibrate) navigator.vibrate(30);
+        }, 600);
+      });
+
+      taskEl.addEventListener('pointerup', e => {
+        clearTimeout(longPressTimer);
+        if (taskEl.classList.contains('deleting')) {
+          // Show confirm dialog
+          e.preventDefault();
+          const tasks = tasksForSelected();
+          const task = tasks[deleteIndex];
+          $('confirmText').textContent = `确定要删除「${task.title}」吗？`;
+          $('confirmOverlay').classList.add('show');
+          pendingDeleteIndex = deleteIndex;
+          taskEl.classList.remove('deleting');
+        }
+      });
+
+      taskEl.addEventListener('pointerleave', () => {
+        clearTimeout(longPressTimer);
+        if (taskEl.classList.contains('deleting')) {
+          taskEl.classList.remove('deleting');
+        }
+      });
+
+      taskEl.addEventListener('pointercancel', () => {
+        clearTimeout(longPressTimer);
+        if (taskEl.classList.contains('deleting')) {
+          taskEl.classList.remove('deleting');
+        }
+      });
+    }
+
+    let pendingDeleteIndex = null;
+
+    function confirmDeleteTask() {
+      if (pendingDeleteIndex === null) return;
+      const tasks = tasksForSelected();
+      const task = tasks[pendingDeleteIndex];
+      tasks.splice(pendingDeleteIndex, 1);
+      plans[selectedKey] = tasks;
+      savePlans();
+      pendingDeleteIndex = null;
+      $('confirmOverlay').classList.remove('show');
+      render();
+      showToast(`已删除「${task.title}」`);
+    }
+
+    function cancelDelete() {
+      pendingDeleteIndex = null;
+      $('confirmOverlay').classList.remove('show');
+    }
+
+    // ── Render ──────────────────────────────────────────
+    function renderWeek() {
+      const selDate = parseDate(selectedKey);
+      const monday = addDays(selDate, selDate.getDay()===0 ? -6 : 1-selDate.getDay());
+      $('week').innerHTML = Array.from({length:7}, (_, i) => {
+        const date = addDays(monday, i);
+        const key = dateKey(date);
+        const hasTask = (plans[key] || []).length > 0;
+        return `<button class="day ${key===selectedKey?'active':''}" data-date="${key}">${weekdays[date.getDay()]}<b>${date.getDate()}</b>${hasTask? '<span style="display:block;width:4px;height:4px;border-radius:50%;background:var(--lime);margin:2px auto 0"></span>' : ''}</button>`;
+      }).join('');
+      document.querySelectorAll('.day').forEach(btn => {
+        btn.onclick = () => selectDate(btn.dataset.date);
+      });
+    }
+
+    function render() {
+      const tasks = tasksForSelected();
+      const done = tasks.filter(t => t.done).length;
+      const percent = tasks.length ? Math.round(done/tasks.length*100) : 0;
+
+      $('fullDate').textContent = fullDateLabel(selectedKey);
+      $('datePicker').value = selectedKey;
+      $('summaryTitle').textContent = isToday() ? '今日完成度' : `${dateLabel(selectedKey)}完成度`;
+      $('summaryDate').textContent = isToday() ? '今天' : dateLabel(selectedKey);
+      $('taskHeading').textContent = isToday() ? '今天的安排' : `${dateLabel(selectedKey)}的安排`;
+      $('taskCount').textContent = `${tasks.length} 项任务`;
+      $('percent').textContent = percent+'%';
+      $('doneText').textContent = `${done} / ${tasks.length}`;
+      $('summaryMessage').textContent = !tasks.length ? '开始安排这一天最重要的一件事。'
+        : percent===100 ? '这一天的计划全部完成。'
+        : isToday() ? '保持节奏，先完成最重要的一项。'
+        : '这一天还有待完成的计划。';
+      $('progressRing').style.background = `conic-gradient(var(--lime) 0 ${percent}%,#3d4341 ${percent}% 100%)`;
+
+      // Render task list
+      const list = $('taskList');
+      list.innerHTML = tasks.length
+        ? tasks.map((task, i) => `
+          <div class="task ${task.done?'done':''}" data-index="${i}">
+            <div class="swipe-bg">删除</div>
+            <button class="delete-hint" data-index="${i}" aria-label="删除任务">🗑</button>
+            <button class="check" data-index="${i}" aria-label="完成任务">${task.done?'✓':''}</button>
+            <div>
+              <div class="task-title">${escapeHtml(task.title)}</div>
+              <div class="task-meta">
+                ${task.time!=='待安排' ? `<span>🕐 ${escapeHtml(task.time)}</span>` : '<span style="color:#c5c9c5">待安排</span>'}
+                ${task.location ? `<span class="task-location">📍 ${escapeHtml(task.location)}</span>` : ''}
+              </div>
+            </div>
+            <span class="tag ${task.kind||''}">${task.tag||'计划'}</span>
+          </div>`).join('')
+        : `<div class="empty-state">这一天还没有任务。<br>从一件最重要的小事开始吧。</div>`;
+
+      // Attach check handlers
+      list.querySelectorAll('.check').forEach(btn => {
+        btn.onclick = () => {
+          const idx = Number(btn.dataset.index);
+          const current = tasksForSelected();
+          current[idx].done = !current[idx].done;
+          plans[selectedKey] = current;
+          savePlans();
+          render();
+          updateAi();
+          scheduleAllNotifications();
+        };
+      });
+
+      // Attach long-press handlers
+      list.querySelectorAll('.task').forEach((el, i) => {
+        attachLongPress(el, i);
+      });
+
+      // Attach delete hint buttons (visible during deleting state)
+      list.querySelectorAll('.delete-hint').forEach(btn => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          const idx = Number(btn.dataset.index);
+          const current = tasksForSelected();
+          const task = current[idx];
+          $('confirmText').textContent = `确定要删除「${task.title}」吗？`;
+          $('confirmOverlay').classList.add('show');
+          pendingDeleteIndex = idx;
+        };
+      });
+
+      renderWeek();
+      updateAi();
+      scheduleAllNotifications();
+    }
+
+    function escapeHtml(v) {
+      return v.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    }
+
+    function selectDate(key) {
+      selectedKey = key;
+      render();
+      showToast(isToday() ? '已切换到今天' : `已切换到 ${dateLabel(key)}`);
+    }
+
+    // ── Add task ────────────────────────────────────────
+    function addTask(title) {
+      if (!title.trim()) return;
+      const tasks = tasksForSelected();
+      const timeStr = selectedTime || '待安排';
+      const locStr = locationEnabled ? ($('locInput').value.trim() || '') : '';
+      // Auto-tag based on time
+      let tag = '计划', kind = '';
+      if (selectedTime) {
+        const h = parseInt(selectedTime.split(':')[0]);
+        if (h < 9) { tag = '早起'; kind = 'health'; }
+        else if (h < 12) { tag = '专注'; kind = 'focus'; }
+        else if (h < 14) { tag = '休息'; kind = 'health'; }
+        else if (h < 18) { tag = '工作'; kind = 'work'; }
+        else { tag = '生活'; kind = 'life'; }
+      }
+      tasks.push({
+        title: title.trim(),
+        time: timeStr,
+        location: locStr,
+        tag, kind,
+        done: false,
+        notify: notifyPermission === 'granted'
+      });
+      plans[selectedKey] = tasks;
+      savePlans();
+
+      // Reset inputs
+      $('taskInput').value = '';
+      selectedTime = '';
+      $('customTime').value = '';
+      document.querySelectorAll('#quickTime .time-chip').forEach(c => c.classList.remove('selected'));
+      $('locInput').value = '';
+      if (locationEnabled) toggleLocation();
+
+      render();
+      showToast('任务已加入这一天');
+
+      // Schedule notification if applicable
+      if (notifyPermission === 'granted' && selectedKey === todayKey && timeStr !== '待安排') {
+        scheduleAllNotifications();
+      }
+    }
+
+    function selectQuickTime(timeVal) {
+      selectedTime = timeVal;
+      $('customTime').value = '';
+      document.querySelectorAll('#quickTime .time-chip').forEach(c => {
+        c.classList.toggle('selected', c.dataset.time === timeVal);
+      });
+    }
+
+    function toggleLocation() {
+      locationEnabled = !locationEnabled;
+      $('toggleLoc').classList.toggle('on', locationEnabled);
+      $('locationRow').classList.toggle('hidden', !locationEnabled);
+      if (locationEnabled) {
+        setTimeout(() => $('locInput').focus(), 150);
+      } else {
+        $('locInput').value = '';
+      }
+    }
+
+    // ── AI ─────────────────────────────────────────────
+    function updateAi() {
+      const tasks = tasksForSelected();
+      const done = tasks.filter(t => t.done).length;
+      const pending = tasks.length - done;
+      if (!tasks.length) $('aiText').textContent = `${dateLabel(selectedKey)}还没有计划。先安排一件最重要的事，AI 才能帮你优化节奏。`;
+      else if (pending===0) $('aiText').textContent = isToday() ? '今天的计划全部完成了！建议花两分钟复盘，再为明天留下一件最重要的事。' : '这一天的计划已全部完成，可以把这份节奏作为下次参考。';
+      else if (done/tasks.length<.5) $('aiText').textContent = `${dateLabel(selectedKey)}完成了 ${done} 项，还有 ${pending} 项待处理。建议先选最重要的一项，专注 25 分钟。`;
+      else $('aiText').textContent = `${dateLabel(selectedKey)}已完成 ${done} 项，节奏不错。剩余 ${pending} 项按重要程度排序，留出一段不被打扰的专注时间。`;
+    }
+
+    function showToast(msg) {
+      $('toast').textContent = msg;
+      $('toast').classList.add('show');
+      setTimeout(() => $('toast').classList.remove('show'), 2200);
+    }
+
+    // ── Event bindings ──────────────────────────────────
+    $('addBtn').onclick = () => addTask($('taskInput').value);
+    $('taskInput').onkeydown = e => { if (e.key==='Enter') addTask(e.target.value); };
+
+    // Time chips
+    document.querySelectorAll('#quickTime .time-chip').forEach(chip => {
+      chip.onclick = () => selectQuickTime(chip.dataset.time);
+    });
+    $('customTime').onchange = function() {
+      if (this.value) {
+        selectedTime = this.value;
+        document.querySelectorAll('#quickTime .time-chip').forEach(c => c.classList.remove('selected'));
+      }
+    };
+
+    // Location toggle
+    $('toggleLoc').onclick = () => toggleLocation();
+
+    // Notification
+    $('notifyBtn').onclick = () => {
+      if (notifyPermission === 'granted') {
+        showToast('通知已开启 ✅ 任务到时间会提醒你');
+      } else {
+        requestNotification();
+      }
+    };
+    $('enableNotify').onclick = () => requestNotification();
+
+    // Delete confirm
+    $('confirmDelete').onclick = () => confirmDeleteTask();
+    $('cancelDelete').onclick = () => cancelDelete();
+
+    // AI
+    $('refreshAi').onclick = () => { updateAi(); showToast('AI 已重新分析这一天的计划'); };
+
+    // Date navigation
+    $('todayBtn').onclick = () => selectDate(todayKey);
+    $('datePicker').onchange = e => selectDate(e.target.value);
+    $('previousWeek').onclick = () => selectDate(dateKey(addDays(parseDate(selectedKey),-7)));
+    $('nextWeek').onclick = () => selectDate(dateKey(addDays(parseDate(selectedKey),7)));
+
+    // Import
+    $('importBtn').onclick = () => { $('modal').classList.add('show'); $('importArea').focus(); };
+    $('cancelImport').onclick = () => { $('modal').classList.remove('show'); };
+    $('confirmImport').onclick = () => {
+      const incoming = $('importArea').value.split('\n').map(v => v.trim()).filter(Boolean);
+      if (!incoming.length) return showToast('请先输入任务');
+      const tasks = tasksForSelected();
+      incoming.forEach(title => tasks.push({title, time:'待安排', location:'', tag:'导入', kind:'', done:false, notify:false}));
+      plans[selectedKey] = tasks;
+      savePlans();
+      $('modal').classList.remove('show');
+      $('importArea').value = '';
+      render();
+      showToast(`已导入 ${incoming.length} 项任务`);
+    };
+
+    // Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('flowday-sw.js');
+    }
+
+    // Init
+    checkNotifyPermission();
+    render();
+
+    // Periodic notification check (every 60s while app is open)
+    setInterval(() => {
+      if (notifyPermission === 'granted') scheduleAllNotifications();
+    }, 60000);
+  </script>
+</body>
+</html>
