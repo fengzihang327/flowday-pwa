@@ -57,12 +57,10 @@
     .task{display:grid;grid-template-columns:25px 1fr auto;align-items:center;gap:12px;padding:14px 13px;border:1px solid var(--line);border-radius:16px;transition:.2s;background:#fff;position:relative;overflow:hidden}
     .task:hover{border-color:#bbc4b5;transform:translateY(-1px)}
     .task.done{background:#fafbf8}
-    /* Long-press delete states */
     .task.deleting{background:#fff5f5;border-color:#ffc9c9;transform:scale(.97)}
     .task .delete-hint{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--red);color:white;display:none;align-items:center;justify-content:center;font-size:16px;z-index:2;animation:popIn .2s ease}
     .task.deleting .delete-hint{display:flex}
     .task .swipe-bg{position:absolute;inset:0;background:var(--red);display:flex;align-items:center;justify-content:flex-end;padding-right:20px;color:white;font-size:13px;font-weight:700;opacity:0;transition:opacity .15s;pointer-events:none;border-radius:16px}
-    .task.swiped .swipe-bg{opacity:1}
     @keyframes popIn{0%{transform:translateY(-50%) scale(0)}70%{transform:translateY(-50%) scale(1.15)}100%{transform:translateY(-50%) scale(1)}}
     @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
     .task.deleting{animation:shake .3s ease}
@@ -79,14 +77,12 @@
     .tag.work{background:#e6f7ec;color:#3d7a52}
     .task.done .tag{opacity:.55}
     .empty-state{padding:26px 14px;text-align:center;border:1px dashed #d8ddd6;border-radius:16px;color:var(--muted);font-size:12px;line-height:1.65}
-    /* Add task area */
     .add-section{margin-top:16px}
     .add-row{display:flex;gap:10px}
     .add-input{min-width:0;flex:1;border:1px solid var(--line);border-radius:13px;padding:12px 13px;outline:0;background:var(--cream);font-size:13px;-webkit-user-select:text;user-select:text}
     .add-input:focus{border-color:#bdce70;background:white}
     .primary{background:var(--ink);color:white;border-radius:13px;padding:0 16px;font-weight:700;font-size:12px;white-space:nowrap}
     .primary:active{opacity:.85}
-    /* Quick time selector */
     .quick-options{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
     .quick-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-right:2px}
     .time-chip{font-size:11px;padding:6px 11px;border-radius:99px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-weight:600;transition:.15s;white-space:nowrap}
@@ -94,7 +90,9 @@
     .time-chip.selected{background:var(--ink);color:var(--lime);border-color:var(--ink)}
     .time-custom{border:1px solid var(--line);border-radius:99px;padding:6px 8px;font-size:11px;background:var(--paper);color:var(--ink);width:85px;outline:0;-webkit-user-select:text;user-select:text}
     .time-custom:focus{border-color:#bdce70}
-    /* Location toggle */
+    .dur-chip{background:#f5f7f3}
+    .dur-chip.selected{background:var(--ink);color:var(--lime);border-color:var(--ink)}
+    .end-preview{font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap;margin-left:auto}
     .location-row{margin-top:8px;display:flex;align-items:center;gap:8px;transition:.2s}
     .location-row.hidden{display:none}
     .toggle-loc{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);background:none;padding:4px 0;font-weight:600}
@@ -104,7 +102,13 @@
     .toggle-loc.on .toggle-dot:after{left:14px}
     .loc-input{flex:1;border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-size:12px;outline:0;background:var(--paper);-webkit-user-select:text;user-select:text;min-width:0}
     .loc-input:focus{border-color:#bdce70}
-    /* Notification permission banner */
+    .week-chip{font-size:10px;padding:5px 9px;min-width:32px;text-align:center}
+    .week-chip.selected{background:var(--ink);color:var(--lime);border-color:var(--ink)}
+    .repeat-chip{font-size:10px;padding:5px 10px}
+    .routine-section{border-top:1px solid var(--line);margin-top:16px;padding-top:16px}
+    .routine-section .task{border-color:#e8ebe7;background:#fafbf8}
+    .routine-del{width:32px;height:32px;border-radius:50%;background:#f2f4f0;font-size:14px;display:grid;place-items:center;transition:.15s}
+    .routine-del:active{transform:scale(.9);background:var(--red);color:white}
     .notify-banner{display:none;align-items:center;gap:10px;padding:11px 15px;background:#fffbe6;border:1px solid #f0e68c;border-radius:12px;margin-top:12px;font-size:11px;color:#6b6400}
     .notify-banner.show{display:flex}
     .notify-banner button{flex-shrink:0;font-size:11px;font-weight:700;padding:6px 12px;border-radius:99px;background:var(--ink);color:var(--lime)}
@@ -114,7 +118,6 @@
     .spark{width:24px;height:24px;background:var(--ink);color:var(--lime);border-radius:8px;display:grid;place-items:center}
     .ai-card p{font-size:12px;line-height:1.65;margin:13px 0;color:#59634f}
     .ai-link{font-size:11px;font-weight:800;background:none;padding:0;text-decoration:underline;text-underline-offset:3px}
-    /* Modal */
     .modal{position:fixed;inset:0;background:rgba(20,24,22,.45);display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:10}
     .modal.show{display:flex}
     .modal-box{background:var(--paper);border-radius:24px;padding:24px;width:min(520px,100%);box-shadow:0 20px 80px rgba(0,0,0,.2);max-height:85vh;overflow-y:auto}
@@ -123,7 +126,6 @@
     .import-area{width:100%;height:150px;resize:none;border:1px solid var(--line);border-radius:14px;padding:13px;line-height:1.7;font-size:12px;outline:0;background:var(--cream);-webkit-user-select:text;user-select:text}
     .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
     .secondary{background:var(--cream);border:1px solid var(--line);padding:11px 15px;border-radius:12px;font-size:12px;font-weight:700}
-    /* Delete confirm dialog */
     .confirm-overlay{position:fixed;inset:0;background:rgba(20,24,22,.5);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
     .confirm-overlay.show{display:flex}
     .confirm-card{background:var(--paper);border-radius:20px;padding:24px;text-align:center;max-width:300px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25)}
@@ -132,10 +134,8 @@
     .confirm-actions{display:flex;gap:10px;justify-content:center}
     .btn-danger{background:var(--red);color:white;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:700}
     .btn-ghost{background:var(--cream);border:1px solid var(--line);padding:10px 20px;border-radius:12px;font-size:13px;font-weight:700}
-    /* Toast */
     .toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:white;padding:11px 18px;border-radius:99px;font-size:12px;transition:.25s;z-index:30;pointer-events:none;white-space:nowrap}
     .toast.show{opacity:1;transform:translate(-50%,0)}
-    /* Responsive */
     @media(max-width:760px){.topbar{height:68px;padding:0 18px}.layout{display:block;padding:27px 18px 38px}.hero h1{font-size:38px;max-width:320px}.hero-copy{font-size:13px}.date-row{align-items:flex-start;flex-direction:column}.date-controls{width:100%;justify-content:space-between}.date-picker{flex:1;max-width:160px}.week{gap:6px}.day{flex:1;width:auto}.summary{margin-top:25px;margin-bottom:25px}.main-card{padding:18px;border-radius:21px}.task{grid-template-columns:24px 1fr}.tag{grid-column:2;justify-self:start;margin-top:-5px}.add-row{margin-top:0}.add-input{font-size:12px}.primary{padding:0 13px}.quick-options{gap:5px}.time-chip{font-size:10px;padding:5px 9px}.modal{padding:10px}.modal-box{padding:21px}}
   </style>
 </head>
@@ -155,14 +155,19 @@
         <div class="main-card">
           <div class="card-head"><h2 id="taskHeading">今天的安排</h2><span class="count" id="taskCount">0 项任务</span></div>
           <div class="task-list" id="taskList"></div>
+          <!-- Routine management section -->
+          <div class="routine-section" id="routineSection" style="display:none">
+            <div class="card-head" style="margin-bottom:14px"><h2 style="font-size:15px">🔄 例行任务</h2></div>
+            <div id="routineList" class="task-list"></div>
+          </div>
           <div class="add-section">
             <div class="add-row">
               <input class="add-input" id="taskInput" placeholder="添加一件小事…" maxlength="50" autocomplete="off">
               <button class="primary" id="addBtn">添加任务</button>
             </div>
-            <!-- Quick time selector -->
+            <!-- Start time selector -->
             <div class="quick-options" id="quickTime">
-              <span class="quick-label">⏱ 时间</span>
+              <span class="quick-label">⏱ 开始</span>
               <button class="time-chip" data-time="08:00">08:00</button>
               <button class="time-chip" data-time="09:00">09:00</button>
               <button class="time-chip" data-time="10:00">10:00</button>
@@ -173,12 +178,41 @@
               <button class="time-chip" data-time="20:00">20:00</button>
               <input class="time-custom" id="customTime" type="time" placeholder="自定义">
             </div>
+            <!-- Duration chips (hidden until start time selected) -->
+            <div class="quick-options" id="durationOptions" style="display:none">
+              <span class="quick-label">⏳ 时长</span>
+              <button class="time-chip dur-chip" data-dur="30">30分钟</button>
+              <button class="time-chip dur-chip" data-dur="60">1小时</button>
+              <button class="time-chip dur-chip" data-dur="90">1.5小时</button>
+              <button class="time-chip dur-chip" data-dur="120">2小时</button>
+              <span class="end-preview" id="endPreview"></span>
+            </div>
             <!-- Location toggle -->
             <button class="toggle-loc" id="toggleLoc">
               <span class="toggle-dot"></span>📍 添加地点
             </button>
             <div class="location-row hidden" id="locationRow">
               <input class="loc-input" id="locInput" placeholder="输入地点，如：会议室A、家里、咖啡店…" maxlength="30" autocomplete="off">
+            </div>
+            <!-- Routine toggle -->
+            <button class="toggle-loc" id="toggleRoutine">
+              <span class="toggle-dot"></span>🔄 设为例行
+            </button>
+            <div class="location-row hidden" id="routineRow">
+              <div class="quick-options" style="margin:0">
+                <button class="time-chip repeat-chip selected" data-repeat="daily">每天</button>
+                <button class="time-chip repeat-chip" data-repeat="weekdays">工作日</button>
+                <button class="time-chip repeat-chip" data-repeat="weekly">自定义</button>
+              </div>
+              <div id="weekdayPicker" style="display:none;margin-top:6px;display:none;gap:4px;flex-wrap:wrap">
+                <button class="time-chip week-chip" data-day="1">一</button>
+                <button class="time-chip week-chip" data-day="2">二</button>
+                <button class="time-chip week-chip" data-day="3">三</button>
+                <button class="time-chip week-chip" data-day="4">四</button>
+                <button class="time-chip week-chip" data-day="5">五</button>
+                <button class="time-chip week-chip" data-day="6">六</button>
+                <button class="time-chip week-chip" data-day="0">日</button>
+              </div>
             </div>
             <!-- Notification permission banner -->
             <div class="notify-banner" id="notifyBanner">
@@ -194,18 +228,18 @@
   <!-- Import modal -->
   <div class="modal" id="modal"><div class="modal-box"><h2>导入任务</h2><p>每行输入一项任务，也可以粘贴从备忘录、日历或其他 App 复制的清单。</p><textarea class="import-area" id="importArea" placeholder="例：&#10;完成季度复盘&#10;预约牙医&#10;读 20 页书"></textarea><div class="modal-actions"><button class="secondary" id="cancelImport">取消</button><button class="primary" id="confirmImport" style="padding:11px 15px">导入清单</button></div></div></div>
   <!-- Delete confirmation -->
-  <div class="confirm-overlay" id="confirmOverlay"><div class="confirm-card"><h3>删除任务</h3><p id="confirmText">确定要删除「」吗？</p><div class="confirm-actions"><button class="btn-ghost" id="cancelDelete">取消</button><button class="btn-danger" id="confirmDelete">删除</button></div></div></div>
+  <div class="confirm-overlay" id="confirmOverlay"><div class="confirm-card"><h3 id="confirmTitle">删除任务</h3><p id="confirmText">确定要删除「」吗？</p><div class="confirm-actions"><button class="btn-ghost" id="cancelDelete">取消</button><button class="btn-danger" id="confirmDelete">删除</button></div></div></div>
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
   <script>
     // ── Data ────────────────────────────────────────────
     const starterTasks=[
-      {title:'完成产品方案初稿',time:'09:00 — 10:30',location:'',tag:'专注',kind:'focus',done:true,notify:false},
-      {title:'回复重要邮件',time:'11:00 — 11:30',location:'办公室',tag:'工作',kind:'work',done:true,notify:false},
-      {title:'午间散步 20 分钟',time:'12:30 — 13:00',location:'小区公园',tag:'健康',kind:'health',done:true,notify:false},
-      {title:'整理项目反馈与待办',time:'14:00 — 15:00',location:'',tag:'工作',kind:'work',done:false,notify:false},
-      {title:'阅读《思考，快与慢》',time:'21:00 — 21:30',location:'书房',tag:'成长',kind:'focus',done:false,notify:false}
+      {title:'完成产品方案初稿',startTime:'09:00',endTime:'10:30',location:'',tag:'专注',kind:'focus',done:true,notify:false},
+      {title:'回复重要邮件',startTime:'11:00',endTime:'11:30',location:'办公室',tag:'工作',kind:'work',done:true,notify:false},
+      {title:'午间散步 20 分钟',startTime:'12:30',endTime:'13:00',location:'小区公园',tag:'健康',kind:'health',done:true,notify:false},
+      {title:'整理项目反馈与待办',startTime:'14:00',endTime:'15:00',location:'',tag:'工作',kind:'work',done:false,notify:false},
+      {title:'阅读《思考，快与慢》',startTime:'21:00',endTime:'21:30',location:'书房',tag:'成长',kind:'focus',done:false,notify:false}
     ];
 
     const $ = id => document.getElementById(id);
@@ -216,124 +250,185 @@
     const todayKey = dateKey(new Date());
     let selectedKey = todayKey;
     let selectedTime = '';
+    let selectedDuration = null;
     let locationEnabled = false;
+    let routineEnabled = false;
+    let selectedRepeatType = 'daily';
+    let selectedWeekdays = [];
+
+    // ── Plans storage ───────────────────────────────────
     let plans = JSON.parse(localStorage.getItem('flowday-plans') || '{}');
     const legacyTasks = JSON.parse(localStorage.getItem('flowday-tasks') || 'null');
     if (legacyTasks && !plans[todayKey]) plans[todayKey] = legacyTasks;
     if (!Object.keys(plans).length) plans[todayKey] = starterTasks;
+
+    // ── Data migration: old time string → startTime/endTime
+    function migrateTask(task) {
+      if (task.startTime !== undefined) return task; // already migrated
+      const t = { ...task };
+      const oldTime = task.time || '待安排';
+      if (oldTime === '待安排') {
+        t.startTime = ''; t.endTime = '';
+      } else if (oldTime.includes('—')) {
+        const parts = oldTime.split('—').map(s => s.trim());
+        t.startTime = parts[0] || ''; t.endTime = parts[1] || '';
+      } else if (oldTime.includes('-')) {
+        const parts = oldTime.split('-').map(s => s.trim());
+        t.startTime = parts[0] || ''; t.endTime = parts[1] || '';
+      } else {
+        t.startTime = oldTime; t.endTime = '';
+      }
+      return t;
+    }
+    // Migrate all existing plans
+    Object.keys(plans).forEach(dk => {
+      plans[dk] = plans[dk].map(migrateTask);
+    });
+    // Migrate legacy tasks too
+    if (legacyTasks) plans[todayKey] = legacyTasks.map(migrateTask);
+
     const savePlans = () => localStorage.setItem('flowday-plans', JSON.stringify(plans));
     const tasksForSelected = () => plans[selectedKey] || [];
     const isToday = () => selectedKey === todayKey;
     const dateLabel = key => parseDate(key).toLocaleDateString('zh-CN',{month:'long',day:'numeric'});
     const fullDateLabel = key => {const d=parseDate(key);return `星期${weekdays[d.getDay()]} · ${d.getFullYear()} / ${String(d.getMonth()+1).padStart(2,'0')} / ${String(d.getDate()).padStart(2,'0')}`};
 
+    // ── Routine storage ─────────────────────────────────
+    let routines = JSON.parse(localStorage.getItem('flowday-routines') || '[]');
+    let routineCompletions = JSON.parse(localStorage.getItem('flowday-routine-completions') || '{}');
+    const saveRoutines = () => localStorage.setItem('flowday-routines', JSON.stringify(routines));
+    const saveRoutineCompletions = () => localStorage.setItem('flowday-routine-completions', JSON.stringify(routineCompletions));
+
+    // ── Time utilities ──────────────────────────────────
+    function calcEndTime(startTime, durMinutes) {
+      if (!startTime || durMinutes == null) return '';
+      const [h, m] = startTime.split(':').map(Number);
+      const total = h * 60 + m + durMinutes;
+      const eh = Math.floor(total / 60) % 24;
+      const em = total % 60;
+      return `${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}`;
+    }
+
+    function formatTimeRange(task) {
+      if (task.startTime && task.endTime) return `${task.startTime} — ${task.endTime}`;
+      if (task.startTime) return task.startTime;
+      return '待安排';
+    }
+
+    // ── Routine instance generation ─────────────────────
+    function routineMatchesDate(routine, dk) {
+      const date = parseDate(dk);
+      const dow = date.getDay();
+      if (routine.repeatType === 'daily') return true;
+      if (routine.repeatType === 'weekdays') return dow >= 1 && dow <= 5;
+      if (routine.repeatType === 'weekly') return routine.weekdays && routine.weekdays.includes(dow);
+      return false;
+    }
+
+    function getRoutineInstances(dk) {
+      return routines
+        .filter(r => routineMatchesDate(r, dk))
+        .map(r => ({
+          _isRoutine: true,
+          _routineId: r.id,
+          title: r.title,
+          startTime: r.startTime,
+          endTime: r.endTime,
+          location: r.location || '',
+          tag: r.tag || '计划',
+          kind: r.kind || '',
+          done: !!(routineCompletions[r.id] && routineCompletions[r.id][dk]),
+          notify: false
+        }));
+    }
+
+    function getAllItemsForDate(dk) {
+      const planTasks = (plans[dk] || []).map(t => ({ ...t, _isRoutine: false }));
+      const routineTasks = getRoutineInstances(dk);
+      const all = [...planTasks, ...routineTasks];
+      all.sort((a, b) => {
+        const ta = a.startTime || '99:99';
+        const tb = b.startTime || '99:99';
+        return ta.localeCompare(tb);
+      });
+      return all;
+    }
+
     // ── Notification ────────────────────────────────────
     let notifyPermission = 'default';
 
     function checkNotifyPermission() {
-      if ('Notification' in window) {
-        notifyPermission = Notification.permission;
-      }
+      if ('Notification' in window) notifyPermission = Notification.permission;
       updateNotifyUI();
     }
 
     function updateNotifyUI() {
       const banner = $('notifyBanner');
       const badge = $('notifyBadge');
-      if (notifyPermission === 'default') {
-        banner.classList.add('show');
-        badge.style.display = 'none';
-      } else if (notifyPermission === 'granted') {
-        banner.classList.remove('show');
-        badge.style.display = 'block';
-      } else {
-        banner.classList.remove('show');
-        badge.style.display = 'none';
-      }
+      if (notifyPermission === 'default') { banner.classList.add('show'); badge.style.display = 'none'; }
+      else if (notifyPermission === 'granted') { banner.classList.remove('show'); badge.style.display = 'block'; }
+      else { banner.classList.remove('show'); badge.style.display = 'none'; }
     }
 
     async function requestNotification() {
-      if (!('Notification' in window)) {
-        showToast('此设备不支持通知功能');
-        return;
-      }
+      if (!('Notification' in window)) { showToast('此设备不支持通知功能'); return; }
       try {
         const result = await Notification.requestPermission();
         notifyPermission = result;
         updateNotifyUI();
-        if (result === 'granted') {
-          showToast('✅ 通知已开启，任务到时间会提醒你');
-          scheduleAllNotifications();
-        } else {
-          showToast('通知未开启，可稍后在设置中打开');
-        }
-      } catch (e) {
-        showToast('通知权限请求失败');
-      }
+        if (result === 'granted') { showToast('✅ 通知已开启'); scheduleAllNotifications(); }
+        else showToast('通知未开启，可稍后在设置中打开');
+      } catch (e) { showToast('通知权限请求失败'); }
     }
 
     function scheduleAllNotifications() {
       if (notifyPermission !== 'granted') return;
-      const tasks = tasksForSelected();
-      // Schedule notifications for tasks with specific times on today
-      tasks.forEach((task, index) => {
-        if (task.done || !task.time || task.time === '待安排') return;
-        const timeMatch = task.time.match(/(\d{1,2}):(\d{2})/);
-        if (!timeMatch) return;
-        const [_, h, m] = timeMatch;
+      const allItems = getAllItemsForDate(todayKey);
+      allItems.forEach(item => {
+        if (item.done || !item.startTime) return;
+        const m = item.startTime.match(/(\d{1,2}):(\d{2})/);
+        if (!m) return;
         const now = new Date();
-        const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m), 0);
-        // Notify 5 minutes before
-        const notifyTime = target.getTime() - 5 * 60 * 1000;
-        const delay = notifyTime - now.getTime();
+        const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(m[1]), parseInt(m[2]), 0);
+        const delay = target.getTime() - 5 * 60 * 1000 - now.getTime();
         if (delay > 0 && delay < 24 * 60 * 60 * 1000) {
-          setTimeout(() => {
-            showTaskNotification(task);
-          }, delay);
+          setTimeout(() => { showTaskNotification(item); }, delay);
         }
       });
     }
 
-    function showTaskNotification(task) {
+    function showTaskNotification(item) {
       if (notifyPermission !== 'granted') return;
-      const title = '⏰ ' + task.title;
+      const body = (item.location ? `📍 ${item.location} · ` : '') + `🕐 ${formatTimeRange(item)}`;
       const options = {
-        body: task.location ? `📍 ${task.location} · ${task.time}` : `🕐 ${task.time}`,
-        icon: 'flowday-icon.svg',
-        badge: 'flowday-icon.svg',
-        tag: 'flowday-task',
-        vibrate: [200, 100, 200],
-        requireInteraction: true,
-        silent: false
+        body, icon: 'flowday-icon.svg', badge: 'flowday-icon.svg',
+        tag: 'flowday-task', vibrate: [200, 100, 200], requireInteraction: true, silent: false
       };
       try {
-        const n = new Notification(title, options);
-        n.onclick = () => {
-          n.close();
-          window.focus();
-        };
+        const n = new Notification('⏰ ' + item.title, options);
+        n.onclick = () => { n.close(); window.focus(); };
       } catch (e) {
-        // Fallback: post to service worker
         if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage({
-            type: 'showNotification',
-            title, options
-          });
+          navigator.serviceWorker.controller.postMessage({ type: 'showNotification', title: '⏰ ' + item.title, options });
         }
       }
     }
 
     // ── Long-press delete ──────────────────────────────
-    let longPressTimer = null;
-    let longPressTarget = null;
-    let deleteIndex = null;
+    let longPressTimer = null, longPressTarget = null, longPressIndex = null;
 
-    function attachLongPress(taskEl, index) {
+    function attachLongPress(taskEl, index, allItems) {
       taskEl.addEventListener('pointerdown', e => {
-        if (e.target.closest('.check')) return; // Don't trigger on check button
+        if (e.target.closest('.check')) return;
         longPressTarget = taskEl;
-        deleteIndex = index;
+        longPressIndex = index;
         longPressTimer = setTimeout(() => {
+          const item = allItems[index];
+          if (item._isRoutine) {
+            // Routine instances can't be deleted via long-press
+            showToast('例行任务需在下方管理中删除');
+            return;
+          }
           taskEl.classList.add('deleting');
           if (navigator.vibrate) navigator.vibrate(30);
         }, 600);
@@ -342,35 +437,41 @@
       taskEl.addEventListener('pointerup', e => {
         clearTimeout(longPressTimer);
         if (taskEl.classList.contains('deleting')) {
-          // Show confirm dialog
           e.preventDefault();
-          const tasks = tasksForSelected();
-          const task = tasks[deleteIndex];
-          $('confirmText').textContent = `确定要删除「${task.title}」吗？`;
+          const item = allItems[longPressIndex];
+          if (item._isRoutine) { taskEl.classList.remove('deleting'); return; }
+          $('confirmTitle').textContent = '删除任务';
+          $('confirmText').textContent = `确定要删除「${item.title}」吗？`;
           $('confirmOverlay').classList.add('show');
-          pendingDeleteIndex = deleteIndex;
+          pendingDeleteIndex = longPressIndex;
+          pendingDeleteIsRoutine = false;
           taskEl.classList.remove('deleting');
         }
       });
 
-      taskEl.addEventListener('pointerleave', () => {
-        clearTimeout(longPressTimer);
-        if (taskEl.classList.contains('deleting')) {
-          taskEl.classList.remove('deleting');
-        }
-      });
-
-      taskEl.addEventListener('pointercancel', () => {
-        clearTimeout(longPressTimer);
-        if (taskEl.classList.contains('deleting')) {
-          taskEl.classList.remove('deleting');
-        }
-      });
+      taskEl.addEventListener('pointerleave', () => { clearTimeout(longPressTimer); taskEl.classList.remove('deleting'); });
+      taskEl.addEventListener('pointercancel', () => { clearTimeout(longPressTimer); taskEl.classList.remove('deleting'); });
     }
 
-    let pendingDeleteIndex = null;
+    let pendingDeleteIndex = null, pendingDeleteIsRoutine = false, pendingRoutineDeleteIndex = null;
 
     function confirmDeleteTask() {
+      if (pendingDeleteIsRoutine) {
+        // Deleting a routine template
+        if (pendingRoutineDeleteIndex === null) return;
+        const r = routines[pendingRoutineDeleteIndex];
+        // Clean up completions
+        if (routineCompletions[r.id]) delete routineCompletions[r.id];
+        routines.splice(pendingRoutineDeleteIndex, 1);
+        saveRoutines();
+        saveRoutineCompletions();
+        pendingRoutineDeleteIndex = null; pendingDeleteIsRoutine = false;
+        $('confirmOverlay').classList.remove('show');
+        render();
+        showToast(`已删除例行「${r.title}」`);
+        return;
+      }
+      // Deleting a regular task
       if (pendingDeleteIndex === null) return;
       const tasks = tasksForSelected();
       const task = tasks[pendingDeleteIndex];
@@ -385,6 +486,8 @@
 
     function cancelDelete() {
       pendingDeleteIndex = null;
+      pendingDeleteIsRoutine = false;
+      pendingRoutineDeleteIndex = null;
       $('confirmOverlay').classList.remove('show');
     }
 
@@ -395,7 +498,8 @@
       $('week').innerHTML = Array.from({length:7}, (_, i) => {
         const date = addDays(monday, i);
         const key = dateKey(date);
-        const hasTask = (plans[key] || []).length > 0;
+        const allItems = getAllItemsForDate(key);
+        const hasTask = allItems.length > 0;
         return `<button class="day ${key===selectedKey?'active':''}" data-date="${key}">${weekdays[date.getDay()]}<b>${date.getDate()}</b>${hasTask? '<span style="display:block;width:4px;height:4px;border-radius:50%;background:var(--lime);margin:2px auto 0"></span>' : ''}</button>`;
       }).join('');
       document.querySelectorAll('.day').forEach(btn => {
@@ -404,19 +508,19 @@
     }
 
     function render() {
-      const tasks = tasksForSelected();
-      const done = tasks.filter(t => t.done).length;
-      const percent = tasks.length ? Math.round(done/tasks.length*100) : 0;
+      const allItems = getAllItemsForDate(selectedKey);
+      const done = allItems.filter(t => t.done).length;
+      const percent = allItems.length ? Math.round(done/allItems.length*100) : 0;
 
       $('fullDate').textContent = fullDateLabel(selectedKey);
       $('datePicker').value = selectedKey;
       $('summaryTitle').textContent = isToday() ? '今日完成度' : `${dateLabel(selectedKey)}完成度`;
       $('summaryDate').textContent = isToday() ? '今天' : dateLabel(selectedKey);
       $('taskHeading').textContent = isToday() ? '今天的安排' : `${dateLabel(selectedKey)}的安排`;
-      $('taskCount').textContent = `${tasks.length} 项任务`;
+      $('taskCount').textContent = `${allItems.length} 项任务`;
       $('percent').textContent = percent+'%';
-      $('doneText').textContent = `${done} / ${tasks.length}`;
-      $('summaryMessage').textContent = !tasks.length ? '开始安排这一天最重要的一件事。'
+      $('doneText').textContent = `${done} / ${allItems.length}`;
+      $('summaryMessage').textContent = !allItems.length ? '开始安排这一天最重要的一件事。'
         : percent===100 ? '这一天的计划全部完成。'
         : isToday() ? '保持节奏，先完成最重要的一项。'
         : '这一天还有待完成的计划。';
@@ -424,58 +528,130 @@
 
       // Render task list
       const list = $('taskList');
-      list.innerHTML = tasks.length
-        ? tasks.map((task, i) => `
-          <div class="task ${task.done?'done':''}" data-index="${i}">
-            <div class="swipe-bg">删除</div>
-            <button class="delete-hint" data-index="${i}" aria-label="删除任务">🗑</button>
-            <button class="check" data-index="${i}" aria-label="完成任务">${task.done?'✓':''}</button>
+      if (!allItems.length) {
+        list.innerHTML = `<div class="empty-state">这一天还没有任务。<br>从一件最重要的小事开始吧。</div>`;
+      } else {
+        list.innerHTML = allItems.map((item, i) => `
+          <div class="task ${item.done?'done':''}" data-index="${i}" data-is-routine="${item._isRoutine||false}">
+            <div class="swipe-bg">${item._isRoutine?'':''}</div>
+            <button class="delete-hint" data-index="${i}" aria-label="删除任务" ${item._isRoutine?'style="display:none"':''}>🗑</button>
+            <button class="check" data-index="${i}" aria-label="完成任务">${item.done?'✓':''}</button>
             <div>
-              <div class="task-title">${escapeHtml(task.title)}</div>
+              <div class="task-title">${item._isRoutine?'🔄 ':''}${escapeHtml(item.title)}</div>
               <div class="task-meta">
-                ${task.time!=='待安排' ? `<span>🕐 ${escapeHtml(task.time)}</span>` : '<span style="color:#c5c9c5">待安排</span>'}
-                ${task.location ? `<span class="task-location">📍 ${escapeHtml(task.location)}</span>` : ''}
+                ${item.startTime ? `<span>🕐 ${escapeHtml(formatTimeRange(item))}</span>` : '<span style="color:#c5c9c5">待安排</span>'}
+                ${item.location ? `<span class="task-location">📍 ${escapeHtml(item.location)}</span>` : ''}
               </div>
             </div>
-            <span class="tag ${task.kind||''}">${task.tag||'计划'}</span>
-          </div>`).join('')
-        : `<div class="empty-state">这一天还没有任务。<br>从一件最重要的小事开始吧。</div>`;
+            <span class="tag ${item.kind||''}">${item.tag||'计划'}</span>
+          </div>`).join('');
+      }
 
       // Attach check handlers
       list.querySelectorAll('.check').forEach(btn => {
         btn.onclick = () => {
           const idx = Number(btn.dataset.index);
-          const current = tasksForSelected();
-          current[idx].done = !current[idx].done;
-          plans[selectedKey] = current;
-          savePlans();
+          const items = getAllItemsForDate(selectedKey);
+          const item = items[idx];
+          if (item._isRoutine) {
+            const rid = item._routineId;
+            if (!routineCompletions[rid]) routineCompletions[rid] = {};
+            if (routineCompletions[rid][selectedKey]) {
+              delete routineCompletions[rid][selectedKey];
+            } else {
+              routineCompletions[rid][selectedKey] = true;
+            }
+            saveRoutineCompletions();
+          } else {
+            const planIdx = (plans[selectedKey]||[]).findIndex(
+              t => t.title===item.title && t.startTime===item.startTime && !t._isRoutine
+            );
+            // Find the correct index in plans (matching non-routine items)
+            const planTasks = plans[selectedKey] || [];
+            const nonRoutineItems = items.filter(it => !it._isRoutine);
+            const nri = nonRoutineItems.findIndex(it => it.title===item.title && it.startTime===item.startTime);
+            if (nri >= 0) {
+              const realIdx = planTasks.findIndex(
+                t => t.title===item.title && t.startTime===item.startTime && t.endTime===item.endTime
+              );
+              if (realIdx >= 0) {
+                planTasks[realIdx].done = !planTasks[realIdx].done;
+                plans[selectedKey] = planTasks;
+                savePlans();
+              }
+            }
+          }
           render();
           updateAi();
           scheduleAllNotifications();
         };
       });
 
-      // Attach long-press handlers
+      // Attach long-press (skip for routine instances)
       list.querySelectorAll('.task').forEach((el, i) => {
-        attachLongPress(el, i);
+        const items = getAllItemsForDate(selectedKey);
+        attachLongPress(el, i, items);
       });
 
-      // Attach delete hint buttons (visible during deleting state)
+      // Delete hint button (regular tasks only)
       list.querySelectorAll('.delete-hint').forEach(btn => {
         btn.onclick = (e) => {
           e.stopPropagation();
           const idx = Number(btn.dataset.index);
-          const current = tasksForSelected();
-          const task = current[idx];
-          $('confirmText').textContent = `确定要删除「${task.title}」吗？`;
+          const items = getAllItemsForDate(selectedKey);
+          const item = items[idx];
+          if (item._isRoutine) return;
+          $('confirmTitle').textContent = '删除任务';
+          $('confirmText').textContent = `确定要删除「${item.title}」吗？`;
           $('confirmOverlay').classList.add('show');
           pendingDeleteIndex = idx;
+          pendingDeleteIsRoutine = false;
         };
       });
 
+      // Render routine management
+      renderRoutineManagement();
       renderWeek();
       updateAi();
       scheduleAllNotifications();
+    }
+
+    function renderRoutineManagement() {
+      const section = $('routineSection');
+      const list = $('routineList');
+      if (!routines.length) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
+
+      list.innerHTML = routines.map((r, i) => {
+        let repeatLabel;
+        if (r.repeatType === 'daily') repeatLabel = '每天';
+        else if (r.repeatType === 'weekdays') repeatLabel = '每个工作日';
+        else {
+          const days = (r.weekdays || []).sort((a,b)=>a-b).map(d => weekdays[d]).join('');
+          repeatLabel = `每周 ${days}`;
+        }
+        const timeStr = r.startTime ? (r.startTime + (r.endTime ? ' — ' + r.endTime : '')) : '待安排';
+        return `<div class="task" style="grid-template-columns:1fr auto">
+          <div>
+            <div class="task-title">🔄 ${escapeHtml(r.title)}</div>
+            <div class="task-meta"><span>🕐 ${timeStr}</span><span style="margin-left:4px">· ${repeatLabel}</span>${r.location ? `<span class="task-location" style="margin-left:4px">📍 ${escapeHtml(r.location)}</span>` : ''}</div>
+          </div>
+          <button class="routine-del" data-ri="${i}" aria-label="删除例行">✕</button>
+        </div>`;
+      }).join('');
+
+      list.querySelectorAll('.routine-del').forEach(btn => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          const idx = Number(btn.dataset.ri);
+          const r = routines[idx];
+          $('confirmTitle').textContent = '删除例行任务';
+          $('confirmText').textContent = `确定要删除例行「${r.title}」吗？\n该例行的所有完成记录也将被清除。`;
+          $('confirmOverlay').classList.add('show');
+          pendingRoutineDeleteIndex = idx;
+          pendingDeleteIsRoutine = true;
+        };
+      });
     }
 
     function escapeHtml(v) {
@@ -491,9 +667,9 @@
     // ── Add task ────────────────────────────────────────
     function addTask(title) {
       if (!title.trim()) return;
-      const tasks = tasksForSelected();
-      const timeStr = selectedTime || '待安排';
+      const endTime = (selectedTime && selectedDuration) ? calcEndTime(selectedTime, selectedDuration) : '';
       const locStr = locationEnabled ? ($('locInput').value.trim() || '') : '';
+
       // Auto-tag based on time
       let tag = '计划', kind = '';
       if (selectedTime) {
@@ -504,9 +680,33 @@
         else if (h < 18) { tag = '工作'; kind = 'work'; }
         else { tag = '生活'; kind = 'life'; }
       }
+
+      if (routineEnabled) {
+        // Save as routine template
+        const routine = {
+          id: 'r_' + Date.now(),
+          title: title.trim(),
+          repeatType: selectedRepeatType || 'daily',
+          weekdays: selectedRepeatType === 'weekly' ? [...selectedWeekdays] : [],
+          startTime: selectedTime || '',
+          endTime,
+          location: locStr,
+          tag, kind
+        };
+        routines.push(routine);
+        saveRoutines();
+        resetAddForm();
+        render();
+        showToast('已添加为例行任务');
+        return;
+      }
+
+      // Save as regular task
+      const tasks = tasksForSelected();
       tasks.push({
         title: title.trim(),
-        time: timeStr,
+        startTime: selectedTime || '',
+        endTime,
         location: locStr,
         tag, kind,
         done: false,
@@ -514,22 +714,30 @@
       });
       plans[selectedKey] = tasks;
       savePlans();
-
-      // Reset inputs
-      $('taskInput').value = '';
-      selectedTime = '';
-      $('customTime').value = '';
-      document.querySelectorAll('#quickTime .time-chip').forEach(c => c.classList.remove('selected'));
-      $('locInput').value = '';
-      if (locationEnabled) toggleLocation();
-
+      resetAddForm();
       render();
-      showToast('任务已加入这一天');
 
-      // Schedule notification if applicable
-      if (notifyPermission === 'granted' && selectedKey === todayKey && timeStr !== '待安排') {
+      const label = selectedTime ? (endTime ? `🕐 ${selectedTime}—${endTime}` : `🕐 ${selectedTime}`) : '';
+      const locLabel = locStr ? ` 📍${locStr}` : '';
+      showToast(`任务已加入${label}${locLabel}`);
+
+      if (notifyPermission === 'granted' && selectedKey === todayKey && selectedTime) {
         scheduleAllNotifications();
       }
+    }
+
+    function resetAddForm() {
+      $('taskInput').value = '';
+      selectedTime = '';
+      selectedDuration = null;
+      $('customTime').value = '';
+      document.querySelectorAll('#quickTime .time-chip').forEach(c => c.classList.remove('selected'));
+      document.querySelectorAll('#durationOptions .dur-chip').forEach(c => c.classList.remove('selected'));
+      $('durationOptions').style.display = 'none';
+      $('endPreview').textContent = '';
+      $('locInput').value = '';
+      if (locationEnabled) toggleLocation();
+      if (routineEnabled) toggleRoutineMode();
     }
 
     function selectQuickTime(timeVal) {
@@ -538,28 +746,57 @@
       document.querySelectorAll('#quickTime .time-chip').forEach(c => {
         c.classList.toggle('selected', c.dataset.time === timeVal);
       });
+      updateDurationUI();
+    }
+
+    function updateDurationUI() {
+      $('durationOptions').style.display = selectedTime ? 'flex' : 'none';
+      updateEndPreview();
+    }
+
+    function updateEndPreview() {
+      if (selectedTime && selectedDuration) {
+        $('endPreview').textContent = '→ ' + calcEndTime(selectedTime, selectedDuration);
+      } else {
+        $('endPreview').textContent = '';
+      }
     }
 
     function toggleLocation() {
       locationEnabled = !locationEnabled;
       $('toggleLoc').classList.toggle('on', locationEnabled);
       $('locationRow').classList.toggle('hidden', !locationEnabled);
-      if (locationEnabled) {
-        setTimeout(() => $('locInput').focus(), 150);
-      } else {
-        $('locInput').value = '';
+      if (locationEnabled) setTimeout(() => $('locInput').focus(), 150);
+      else $('locInput').value = '';
+    }
+
+    function toggleRoutineMode() {
+      routineEnabled = !routineEnabled;
+      $('toggleRoutine').classList.toggle('on', routineEnabled);
+      $('routineRow').classList.toggle('hidden', !routineEnabled);
+      if (!routineEnabled) {
+        selectedRepeatType = 'daily';
+        selectedWeekdays = [];
+        document.querySelectorAll('.repeat-chip').forEach(c => c.classList.remove('selected'));
+        const dailyChip = document.querySelector('.repeat-chip[data-repeat="daily"]');
+        if (dailyChip) dailyChip.classList.add('selected');
+        $('weekdayPicker').style.display = 'none';
       }
     }
 
     // ── AI ─────────────────────────────────────────────
     function updateAi() {
-      const tasks = tasksForSelected();
-      const done = tasks.filter(t => t.done).length;
-      const pending = tasks.length - done;
-      if (!tasks.length) $('aiText').textContent = `${dateLabel(selectedKey)}还没有计划。先安排一件最重要的事，AI 才能帮你优化节奏。`;
-      else if (pending===0) $('aiText').textContent = isToday() ? '今天的计划全部完成了！建议花两分钟复盘，再为明天留下一件最重要的事。' : '这一天的计划已全部完成，可以把这份节奏作为下次参考。';
-      else if (done/tasks.length<.5) $('aiText').textContent = `${dateLabel(selectedKey)}完成了 ${done} 项，还有 ${pending} 项待处理。建议先选最重要的一项，专注 25 分钟。`;
-      else $('aiText').textContent = `${dateLabel(selectedKey)}已完成 ${done} 项，节奏不错。剩余 ${pending} 项按重要程度排序，留出一段不被打扰的专注时间。`;
+      const allItems = getAllItemsForDate(selectedKey);
+      const done = allItems.filter(t => t.done).length;
+      const pending = allItems.length - done;
+      const routineCount = routines.length;
+      let text;
+      if (!allItems.length) text = `${dateLabel(selectedKey)}还没有计划。先安排一件最重要的事，AI 才能帮你优化节奏。`;
+      else if (pending===0) text = isToday() ? '今天的计划全部完成了！建议花两分钟复盘，再为明天留下一件最重要的事。' : '这一天的计划已全部完成，可以把这份节奏作为下次参考。';
+      else if (done/allItems.length<.5) text = `${dateLabel(selectedKey)}完成了 ${done} 项，还有 ${pending} 项待处理。建议先选最重要的一项，专注 25 分钟。`;
+      else text = `${dateLabel(selectedKey)}已完成 ${done} 项，节奏不错。剩余 ${pending} 项按重要程度排序，留出一段不被打扰的专注时间。`;
+      if (routineCount > 0) text += `\n你设定了 ${routineCount} 项例行任务，系统会自动安排每一天。`;
+      $('aiText').textContent = text;
     }
 
     function showToast(msg) {
@@ -572,7 +809,7 @@
     $('addBtn').onclick = () => addTask($('taskInput').value);
     $('taskInput').onkeydown = e => { if (e.key==='Enter') addTask(e.target.value); };
 
-    // Time chips
+    // Start time chips
     document.querySelectorAll('#quickTime .time-chip').forEach(chip => {
       chip.onclick = () => selectQuickTime(chip.dataset.time);
     });
@@ -580,19 +817,50 @@
       if (this.value) {
         selectedTime = this.value;
         document.querySelectorAll('#quickTime .time-chip').forEach(c => c.classList.remove('selected'));
+        updateDurationUI();
       }
     };
+
+    // Duration chips
+    document.querySelectorAll('#durationOptions .dur-chip').forEach(chip => {
+      chip.onclick = () => {
+        selectedDuration = parseInt(chip.dataset.dur);
+        document.querySelectorAll('#durationOptions .dur-chip').forEach(c => c.classList.toggle('selected', c===chip));
+        updateEndPreview();
+      };
+    });
 
     // Location toggle
     $('toggleLoc').onclick = () => toggleLocation();
 
+    // Routine toggle
+    $('toggleRoutine').onclick = () => toggleRoutineMode();
+
+    // Repeat type chips
+    document.querySelectorAll('.repeat-chip').forEach(chip => {
+      chip.onclick = () => {
+        selectedRepeatType = chip.dataset.repeat;
+        document.querySelectorAll('.repeat-chip').forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        $('weekdayPicker').style.display = selectedRepeatType === 'weekly' ? 'flex' : 'none';
+      };
+    });
+
+    // Weekday chips
+    document.querySelectorAll('.week-chip').forEach(chip => {
+      chip.onclick = () => {
+        const day = parseInt(chip.dataset.day);
+        const idx = selectedWeekdays.indexOf(day);
+        if (idx >= 0) selectedWeekdays.splice(idx, 1);
+        else selectedWeekdays.push(day);
+        chip.classList.toggle('selected');
+      };
+    });
+
     // Notification
     $('notifyBtn').onclick = () => {
-      if (notifyPermission === 'granted') {
-        showToast('通知已开启 ✅ 任务到时间会提醒你');
-      } else {
-        requestNotification();
-      }
+      if (notifyPermission === 'granted') showToast('通知已开启 ✅ 任务到时间会提醒你');
+      else requestNotification();
     };
     $('enableNotify').onclick = () => requestNotification();
 
@@ -616,7 +884,7 @@
       const incoming = $('importArea').value.split('\n').map(v => v.trim()).filter(Boolean);
       if (!incoming.length) return showToast('请先输入任务');
       const tasks = tasksForSelected();
-      incoming.forEach(title => tasks.push({title, time:'待安排', location:'', tag:'导入', kind:'', done:false, notify:false}));
+      incoming.forEach(title => tasks.push({title, startTime:'', endTime:'', location:'', tag:'导入', kind:'', done:false, notify:false}));
       plans[selectedKey] = tasks;
       savePlans();
       $('modal').classList.remove('show');
@@ -626,18 +894,12 @@
     };
 
     // Service Worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('flowday-sw.js');
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('flowday-sw.js');
 
     // Init
     checkNotifyPermission();
     render();
-
-    // Periodic notification check (every 60s while app is open)
-    setInterval(() => {
-      if (notifyPermission === 'granted') scheduleAllNotifications();
-    }, 60000);
+    setInterval(() => { if (notifyPermission === 'granted') scheduleAllNotifications(); }, 60000);
   </script>
 </body>
 </html>
