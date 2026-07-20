@@ -77,8 +77,9 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingVertical="4dp">
-            <View android:id="@+id/w_dot1" android:layout_width="10dp" android:layout_height="10dp"
-                android:layout_marginEnd="8dp" android:background="@drawable/dot_default" />
+            <TextView android:id="@+id/w_dot1" android:layout_width="10dp" android:layout_height="10dp"
+                android:layout_marginEnd="8dp" android:background="@drawable/dot_default"
+                android:text="" android:textColor="#151718" android:textSize="8sp" android:gravity="center" />
             <TextView android:id="@+id/w_label1"
                 android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
                 android:text="" android:textColor="#d0d3d1" android:textSize="12sp"
@@ -94,8 +95,9 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingVertical="4dp">
-            <View android:id="@+id/w_dot2" android:layout_width="10dp" android:layout_height="10dp"
-                android:layout_marginEnd="8dp" android:background="@drawable/dot_default" />
+            <TextView android:id="@+id/w_dot2" android:layout_width="10dp" android:layout_height="10dp"
+                android:layout_marginEnd="8dp" android:background="@drawable/dot_default"
+                android:text="" android:textColor="#151718" android:textSize="8sp" android:gravity="center" />
             <TextView android:id="@+id/w_label2"
                 android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
                 android:text="" android:textColor="#d0d3d1" android:textSize="12sp"
@@ -111,8 +113,9 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingVertical="4dp">
-            <View android:id="@+id/w_dot3" android:layout_width="10dp" android:layout_height="10dp"
-                android:layout_marginEnd="8dp" android:background="@drawable/dot_default" />
+            <TextView android:id="@+id/w_dot3" android:layout_width="10dp" android:layout_height="10dp"
+                android:layout_marginEnd="8dp" android:background="@drawable/dot_default"
+                android:text="" android:textColor="#151718" android:textSize="8sp" android:gravity="center" />
             <TextView android:id="@+id/w_label3"
                 android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
                 android:text="" android:textColor="#d0d3d1" android:textSize="12sp"
@@ -128,8 +131,9 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingVertical="4dp">
-            <View android:id="@+id/w_dot4" android:layout_width="10dp" android:layout_height="10dp"
-                android:layout_marginEnd="8dp" android:background="@drawable/dot_default" />
+            <TextView android:id="@+id/w_dot4" android:layout_width="10dp" android:layout_height="10dp"
+                android:layout_marginEnd="8dp" android:background="@drawable/dot_default"
+                android:text="" android:textColor="#151718" android:textSize="8sp" android:gravity="center" />
             <TextView android:id="@+id/w_label4"
                 android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
                 android:text="" android:textColor="#d0d3d1" android:textSize="12sp"
@@ -145,8 +149,9 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingVertical="4dp">
-            <View android:id="@+id/w_dot5" android:layout_width="10dp" android:layout_height="10dp"
-                android:layout_marginEnd="8dp" android:background="@drawable/dot_default" />
+            <TextView android:id="@+id/w_dot5" android:layout_width="10dp" android:layout_height="10dp"
+                android:layout_marginEnd="8dp" android:background="@drawable/dot_default"
+                android:text="" android:textColor="#151718" android:textSize="8sp" android:gravity="center" />
             <TextView android:id="@+id/w_label5"
                 android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
                 android:text="" android:textColor="#d0d3d1" android:textSize="12sp"
