@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_bg"
+    android:padding="12dp">
+
+    <!-- Top row: brand + date -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="✦ flowday"
+            android:textColor="#e8e8e8"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/w_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#6a706d"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <!-- Progress section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:id="@+id/w_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0%"
+            android:textColor="#d9f75b"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginEnd="10dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/w_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 / 0"
+                android:textColor="#e8e8e8"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium" />
+            <TextView
+                android:id="@+id/w_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="暂无任务"
+                android:textColor="#5a5f5d"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Task rows -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Task 1 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="3dp">
+            <TextView
+                android:id="@+id/w_dot1"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:textSize="8sp"
+                android:textColor="#151718"
+                android:gravity="center"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/dot_open" />
+            <TextView
+                android:id="@+id/w_label1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="#c5c8c7"
+                android:textSize="11sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+            <TextView
+                android:id="@+id/w_time1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#4a4f4d"
+                android:textSize="9sp" />
+        </LinearLayout>
+
+        <!-- Task 2 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="3dp">
+            <TextView
+                android:id="@+id/w_dot2"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:textSize="8sp"
+                android:textColor="#151718"
+                android:gravity="center"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/dot_open" />
+            <TextView
+                android:id="@+id/w_label2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="#c5c8c7"
+                android:textSize="11sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+            <TextView
+                android:id="@+id/w_time2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#4a4f4d"
+                android:textSize="9sp" />
+        </LinearLayout>
+
+        <!-- Task 3 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="3dp">
+            <TextView
+                android:id="@+id/w_dot3"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:textSize="8sp"
+                android:textColor="#151718"
+                android:gravity="center"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/dot_open" />
+            <TextView
+                android:id="@+id/w_label3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="#c5c8c7"
+                android:textSize="11sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+            <TextView
+                android:id="@+id/w_time3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#4a4f4d"
+                android:textSize="9sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- More indicator -->
+    <TextView
+        android:id="@+id/w_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+2 项"
+        android:textColor="#4a4f4d"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/w_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="还没有安排\n打开 Flowday 规划一天"
+        android:textColor="#3d4240"
+        android:textSize="11sp"
+        android:lineSpacingExtra="4dp"
+        android:visibility="gone" />
+
+</LinearLayout>
