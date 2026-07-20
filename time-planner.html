@@ -136,7 +136,29 @@
     .btn-ghost{background:var(--cream);border:1px solid var(--line);padding:10px 20px;border-radius:12px;font-size:13px;font-weight:700}
     .toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;background:var(--ink);color:white;padding:11px 18px;border-radius:99px;font-size:12px;transition:.25s;z-index:30;pointer-events:none;white-space:nowrap}
     .toast.show{opacity:1;transform:translate(-50%,0)}
-    @media(max-width:760px){.topbar{height:68px;padding:0 18px}.layout{display:block;padding:27px 18px 38px}.hero h1{font-size:38px;max-width:320px}.hero-copy{font-size:13px}.date-row{align-items:flex-start;flex-direction:column}.date-controls{width:100%;justify-content:space-between}.date-picker{flex:1;max-width:160px}.week{gap:6px}.day{flex:1;width:auto}.summary{margin-top:25px;margin-bottom:25px}.main-card{padding:18px;border-radius:21px}.task{grid-template-columns:24px 1fr}.tag{grid-column:2;justify-self:start;margin-top:-5px}.add-row{margin-top:0}.add-input{font-size:12px}.primary{padding:0 13px}.quick-options{gap:5px}.time-chip{font-size:10px;padding:5px 9px}.modal{padding:10px}.modal-box{padding:21px}}
+    /* Timeline view */
+    .view-toggle{display:flex;gap:4px;background:var(--cream);border-radius:99px;padding:3px;flex-shrink:0}
+    .view-toggle button{padding:6px 12px;border-radius:99px;font-size:11px;font-weight:700;background:transparent;color:var(--muted);transition:.15s}
+    .view-toggle button.active{background:var(--paper);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+    .timeline{position:relative;padding-left:50px;min-height:680px;margin-bottom:8px}
+    .timeline::before{content:'';position:absolute;left:45px;top:0;bottom:0;width:1px;background:var(--line)}
+    .tl-hour{position:absolute;left:0;transform:translateY(-7px);font-size:10px;color:var(--muted);font-weight:700;width:40px;text-align:right}
+    .tl-hour::after{content:'';position:absolute;left:44px;top:7px;width:6px;height:1px;background:var(--line)}
+    .tl-task{position:absolute;left:50px;right:2px;border-radius:7px;padding:4px 8px;font-size:11px;overflow:hidden;cursor:pointer;transition:opacity .12s;border:1px solid transparent;display:flex;align-items:center;gap:4px;min-height:18px;z-index:1}
+    .tl-task:active{opacity:.65}
+    .tl-task.done{opacity:.4}
+    .tl-task.done .tl-title{text-decoration:line-through}
+    .tl-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px;line-height:1.2}
+    .tl-time{font-size:9px;opacity:.7;white-space:nowrap;flex-shrink:0}
+    .tl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;border:1.5px solid currentColor}
+    .tl-task.done .tl-dot{background:currentColor}
+    .tl-now{position:absolute;left:0;right:0;height:2px;background:var(--red);z-index:2;pointer-events:none;opacity:.9}
+    .tl-now::before{content:'';position:absolute;left:42px;top:-4px;width:9px;height:9px;border-radius:50%;background:var(--red);border:2px solid var(--cream)}
+    .tl-unscheduled{margin-top:12px;padding:0 0 0 50px}
+    .tl-unscheduled h4{font-size:11px;color:var(--muted);margin:0 0 6px;font-weight:700}
+    .tl-unscheduled .task{grid-template-columns:20px 1fr auto;padding:10px 0;border:0;border-radius:0;background:transparent;border-bottom:1px solid var(--line)}
+    .tl-unscheduled .task:hover{transform:none;border-color:transparent;border-bottom-color:var(--line)}
+    @media(max-width:760px){.topbar{height:68px;padding:0 18px}.layout{display:block;padding:27px 18px 38px}.hero h1{font-size:38px;max-width:320px}.hero-copy{font-size:13px}.date-row{align-items:flex-start;flex-direction:column}.date-controls{width:100%;justify-content:space-between}.date-picker{flex:1;max-width:160px}.week{gap:6px}.day{flex:1;width:auto}.summary{margin-top:25px;margin-bottom:25px}.main-card{padding:18px;border-radius:21px}.task{grid-template-columns:24px 1fr}.tag{grid-column:2;justify-self:start;margin-top:-5px}.add-row{margin-top:0}.add-input{font-size:12px}.primary{padding:0 13px}.quick-options{gap:5px}.time-chip{font-size:10px;padding:5px 9px}.modal{padding:10px}.modal-box{padding:21px}.view-toggle button{font-size:10px;padding:4px 9px}.timeline{padding-left:38px;min-height:580px}.timeline::before{left:34px}.tl-hour{width:30px;font-size:9px}.tl-hour::after{left:33px;width:4px}.tl-task{left:38px;font-size:10px;padding:3px 6px;min-height:15px}.tl-unscheduled{padding-left:38px}}
   </style>
 </head>
 <body>
@@ -153,8 +175,9 @@
       </section>
       <section>
         <div class="main-card">
-          <div class="card-head"><h2 id="taskHeading">今天的安排</h2><span class="count" id="taskCount">0 项任务</span></div>
+          <div class="card-head"><h2 id="taskHeading">今天的安排</h2><div style="display:flex;align-items:center;gap:10px"><span class="count" id="taskCount">0 项任务</span><div class="view-toggle" id="viewToggle"><button class="active" data-view="list">列表</button><button data-view="timeline">时间轴</button></div></div></div>
           <div class="task-list" id="taskList"></div>
+          <div class="timeline" id="timeline" style="display:none"></div>
           <!-- Routine management section -->
           <div class="routine-section" id="routineSection" style="display:none">
             <div class="card-head" style="margin-bottom:14px"><h2 style="font-size:15px">🔄 例行任务</h2></div>
@@ -221,7 +244,7 @@
             </div>
           </div>
         </div>
-        <div class="ai-card"><div class="ai-top"><div class="ai-title"><span class="spark">✦</span> AI 今日洞察</div><span class="eyebrow" style="color:#748252">FLOW AI</span></div><p id="aiText">你上午的专注力表现很好。下午有两项高认知任务，建议先完成产品方案，再处理低强度的邮件回复。</p><button class="ai-link" id="refreshAi">重新分析我的计划 →</button></div>
+        <div class="ai-card"><div class="ai-top"><div class="ai-title"><span class="spark">✦</span> AI 今日洞察</div><div style="display:flex;align-items:center;gap:6px"><span class="eyebrow" style="color:#748252">FLOW AI</span><button class="icon-btn" id="settingsBtn" style="width:24px;height:24px;font-size:11px;background:transparent;border:0" aria-label="API 设置">⚙</button></div></div><p id="aiText">你上午的专注力表现很好。下午有两项高认知任务，建议先完成产品方案，再处理低强度的邮件回复。</p><button class="ai-link" id="refreshAi">重新分析我的计划 →</button></div>
       </section>
     </div>
   </main>
@@ -229,6 +252,8 @@
   <div class="modal" id="modal"><div class="modal-box"><h2>导入任务</h2><p>每行输入一项任务，也可以粘贴从备忘录、日历或其他 App 复制的清单。</p><textarea class="import-area" id="importArea" placeholder="例：&#10;完成季度复盘&#10;预约牙医&#10;读 20 页书"></textarea><div class="modal-actions"><button class="secondary" id="cancelImport">取消</button><button class="primary" id="confirmImport" style="padding:11px 15px">导入清单</button></div></div></div>
   <!-- Delete confirmation -->
   <div class="confirm-overlay" id="confirmOverlay"><div class="confirm-card"><h3 id="confirmTitle">删除任务</h3><p id="confirmText">确定要删除「」吗？</p><div class="confirm-actions"><button class="btn-ghost" id="cancelDelete">取消</button><button class="btn-danger" id="confirmDelete">删除</button></div></div></div>
+  <!-- API Key modal -->
+  <div class="modal" id="apiKeyModal"><div class="modal-box"><h2>Gemini API 设置</h2><p>输入 Google Gemini API 密钥以启用 AI 智能分析。密钥仅保存在你的手机本地。</p><input class="add-input" id="apiKeyInput" type="password" placeholder="输入 API Key…" style="font-family:monospace;letter-spacing:1px;font-size:13px" autocomplete="off"><p style="font-size:10px;color:#9da49f;margin-top:8px">免费获取：<a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--ink)">Google AI Studio</a> → 创建 API 密钥 → 选择 Gemini 1.5 Flash</p><div class="modal-actions"><button class="secondary" id="cancelApiKey">取消</button><button class="primary" id="saveApiKey" style="padding:11px 15px">保存</button></div></div></div>
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
@@ -614,6 +639,7 @@
       renderWeek();
       updateAi();
       scheduleAllNotifications();
+      applyView();
     }
 
     function renderRoutineManagement() {
@@ -662,6 +688,101 @@
       selectedKey = key;
       render();
       showToast(isToday() ? '已切换到今天' : `已切换到 ${dateLabel(key)}`);
+    }
+
+    // ── Timeline view ───────────────────────────────────
+    let currentView = localStorage.getItem('flowday-view') || 'list';
+    const TL_START = 6 * 60, TL_END = 24 * 60, TL_RANGE = TL_END - TL_START;
+
+    function tlTop(timeStr) {
+      if (!timeStr) return null;
+      const [h, m] = timeStr.split(':').map(Number);
+      return ((h * 60 + m - TL_START) / TL_RANGE) * 100;
+    }
+
+    function renderTimeline() {
+      const el = $('timeline');
+      const allItems = getAllItemsForDate(selectedKey);
+      const timed = allItems.filter(t => t.startTime);
+      const untimed = allItems.filter(t => !t.startTime);
+
+      let html = '';
+      for (let h = 6; h <= 24; h++) {
+        const pct = ((h * 60 - TL_START) / TL_RANGE) * 100;
+        html += `<div class="tl-hour" style="top:${pct}%">${h===24?'00':String(h).padStart(2,'0')}:00</div>`;
+      }
+
+      if (isToday()) {
+        const nm = new Date().getHours() * 60 + new Date().getMinutes();
+        if (nm >= TL_START && nm <= TL_END) {
+          html += `<div class="tl-now" style="top:${((nm - TL_START) / TL_RANGE) * 100}%"></div>`;
+        }
+      }
+
+      const colors = {
+        focus: { bg: '#fff0eb', border: '#f5cdbe', text: '#d85d42' },
+        work: { bg: '#e6f7ec', border: '#c5e5d2', text: '#3d7a52' },
+        health: { bg: '#e8f5ff', border: '#c1dff5', text: '#4584ad' },
+        life: { bg: '#f3edff', border: '#dfcef5', text: '#8662a8' }
+      };
+      const dc = { bg: '#f2f4f0', border: '#d8ddd6', text: '#6c736d' };
+
+      timed.forEach((item, i) => {
+        const top = tlTop(item.startTime);
+        const end = item.endTime ? tlTop(item.endTime) : null;
+        const hPct = end ? Math.max(end - top, 2.5) : 4;
+        if (top == null) return;
+        const c = colors[item.kind] || dc;
+        html += `<div class="tl-task ${item.done?'done':''}" data-tl-i="${i}" style="top:${top}%;height:${hPct}%;background:${c.bg};border-color:${c.border};color:${c.text}"><span class="tl-dot"></span><span class="tl-title">${escapeHtml(item.title)}</span>${hPct > 4 ? `<span class="tl-time">${escapeHtml(formatTimeRange(item))}</span>` : ''}</div>`;
+      });
+
+      if (untimed.length) {
+        html += `<div class="tl-unscheduled"><h4>📋 待安排 (${untimed.length})</h4>`;
+        html += untimed.map((item, i) => {
+          const ri = timed.length + i;
+          return `<div class="task ${item.done?'done':''}" style="grid-template-columns:20px 1fr auto;padding:10px 0;border:0;border-radius:0;background:transparent;border-bottom:1px solid var(--line)" data-tl-i="${ri}"><button class="check" data-tl-i="${ri}">${item.done?'✓':''}</button><div><div class="task-title">${escapeHtml(item.title)}</div></div><span class="tag ${item.kind||''}">${item.tag||'计划'}</span></div>`;
+        }).join('');
+        html += '</div>';
+      }
+
+      el.innerHTML = html || '<div class="empty-state">这一天还没有安排</div>';
+
+      el.querySelectorAll('.tl-task').forEach(bar => {
+        bar.onclick = () => toggleTlItem(parseInt(bar.dataset.tlI), allItems);
+      });
+      el.querySelectorAll('.tl-unscheduled .check').forEach(btn => {
+        btn.onclick = (e) => { e.stopPropagation(); toggleTlItem(parseInt(btn.dataset.tlI), allItems); };
+      });
+    }
+
+    function toggleTlItem(idx, allItems) {
+      const item = allItems[idx];
+      if (!item) return;
+      if (item._isRoutine) {
+        const rid = item._routineId;
+        if (!routineCompletions[rid]) routineCompletions[rid] = {};
+        if (routineCompletions[rid][selectedKey]) delete routineCompletions[rid][selectedKey];
+        else routineCompletions[rid][selectedKey] = true;
+        saveRoutineCompletions();
+      } else {
+        const planTasks = plans[selectedKey] || [];
+        const realIdx = planTasks.findIndex(t => t.title===item.title && t.startTime===item.startTime && t.endTime===item.endTime);
+        if (realIdx >= 0) {
+          planTasks[realIdx].done = !planTasks[realIdx].done;
+          plans[selectedKey] = planTasks;
+          savePlans();
+        }
+      }
+      render();
+      updateAi();
+    }
+
+    function applyView() {
+      const isTl = currentView === 'timeline';
+      $('taskList').style.display = isTl ? 'none' : '';
+      $('timeline').style.display = isTl ? '' : 'none';
+      document.querySelectorAll('#viewToggle button').forEach(b => b.classList.toggle('active', b.dataset.view === currentView));
+      if (isTl) renderTimeline();
     }
 
     // ── Add task ────────────────────────────────────────
@@ -799,6 +920,54 @@
       $('aiText').textContent = text;
     }
 
+    // ── Gemini API ────────────────────────────────────────
+    let geminiKey = localStorage.getItem('flowday-gemini-key') || '';
+    const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
+
+    async function analyzeWithGemini() {
+      if (!geminiKey) { updateAi(); showToast('⚙ 点击齿轮设置 Gemini API 密钥'); return; }
+      const allItems = getAllItemsForDate(selectedKey);
+      if (!allItems.length) { updateAi(); return; }
+
+      $('aiText').textContent = '正在分析你的日程…';
+      $('refreshAi').textContent = '分析中…';
+      $('refreshAi').disabled = true;
+
+      const taskList = allItems.map(t =>
+        `- ${t.done ? '[✓]' : '[ ]'} ${t.title} ${t.startTime ? t.startTime + (t.endTime ? '—' + t.endTime : '') : '未定时间'}${t.location ? ' @' + t.location : ''}`
+      ).join('\n');
+      const rInfo = routines.length ? '\n例行：' + routines.map(r => {
+        const rl = r.repeatType === 'daily' ? '每天' : r.repeatType === 'weekdays' ? '工作日' : '每周' + (r.weekdays||[]).map(d=>weekdays[d]).join('');
+        return `${r.title} (${rl} ${r.startTime||''})`;
+      }).join(', ') : '';
+
+      const prompt = `你是日程规划助手。分析以下计划，用中文给出简短建议（50字内），指出时间安排是否合理、有无冲突、如何调整优先级。不要客套话。
+
+${taskList}${rInfo}`;
+
+      try {
+        const res = await fetch(`${GEMINI_URL}?key=${geminiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { maxOutputTokens: 150, temperature: 0.4 }
+          })
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) { $('aiText').textContent = text.trim(); showToast('AI 分析完成'); }
+        else throw new Error('empty');
+      } catch (e) {
+        updateAi();
+        showToast('AI 暂不可用，已切换内置分析');
+      } finally {
+        $('refreshAi').textContent = '重新分析我的计划 →';
+        $('refreshAi').disabled = false;
+      }
+    }
+
     function showToast(msg) {
       $('toast').textContent = msg;
       $('toast').classList.add('show');
@@ -806,6 +975,15 @@
     }
 
     // ── Event bindings ──────────────────────────────────
+    // View toggle
+    $('viewToggle').addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn || !btn.dataset.view) return;
+      currentView = btn.dataset.view;
+      localStorage.setItem('flowday-view', currentView);
+      applyView();
+    });
+
     $('addBtn').onclick = () => addTask($('taskInput').value);
     $('taskInput').onkeydown = e => { if (e.key==='Enter') addTask(e.target.value); };
 
@@ -868,8 +1046,23 @@
     $('confirmDelete').onclick = () => confirmDeleteTask();
     $('cancelDelete').onclick = () => cancelDelete();
 
+    // Gemini API key settings
+    $('settingsBtn').onclick = () => {
+      $('apiKeyInput').value = geminiKey;
+      $('apiKeyModal').classList.add('show');
+      setTimeout(() => $('apiKeyInput').focus(), 200);
+    };
+    $('cancelApiKey').onclick = () => $('apiKeyModal').classList.remove('show');
+    $('saveApiKey').onclick = () => {
+      geminiKey = $('apiKeyInput').value.trim();
+      localStorage.setItem('flowday-gemini-key', geminiKey);
+      $('apiKeyModal').classList.remove('show');
+      showToast(geminiKey ? 'API 密钥已保存 ✅' : 'API 密钥已清除');
+    };
+    $('apiKeyInput').onkeydown = e => { if (e.key === 'Enter') $('saveApiKey').click(); };
+
     // AI
-    $('refreshAi').onclick = () => { updateAi(); showToast('AI 已重新分析这一天的计划'); };
+    $('refreshAi').onclick = () => { analyzeWithGemini(); };
 
     // Date navigation
     $('todayBtn').onclick = () => selectDate(todayKey);

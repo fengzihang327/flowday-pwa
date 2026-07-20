@@ -1,4 +1,4 @@
-const cacheName = 'flowday-v3';
+const cacheName = 'flowday-v4';
 const appFiles = [
   './',
   './index.html',

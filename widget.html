@@ -3,212 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#101112">
-  <title>Flowday 小组件</title>
+  <meta name="theme-color" content="#151718">
+  <title>Flowday</title>
   <style>
-    :root{--ink:#151718;--lime:#d9f75b;--muted:#7c817f;--paper:#fff;--cream:#f7f8f5;--line:#e8ebe7}
+    :root{--lime:#d9f75b}
     *{box-sizing:border-box;margin:0;padding:0}
     body{
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: var(--ink);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 8px;
+      font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+      background:#151718;color:#c5c8c7;padding:18px 16px 14px;min-height:100vh;
+      display:flex;flex-direction:column;cursor:pointer;
     }
-    .widget{
-      width: 100%;
-      max-width: 380px;
-      background: linear-gradient(145deg, #1a1d1c 0%, #151718 100%);
-      border-radius: 28px;
-      padding: 22px 20px 18px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.5);
-      position: relative;
-      overflow: hidden;
-    }
-    .widget::before{
-      content:"";
-      position:absolute;
-      width:120px;height:120px;
-      border-radius:50%;
-      border:20px solid rgba(217,247,91,.08);
-      top:-50px;right:-40px;
-    }
-    .widget-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:16px;
-      position:relative;z-index:1;
-    }
-    .widget-brand{
-      display:flex;align-items:center;gap:7px;
-      font-weight:800;font-size:15px;letter-spacing:-.04em;
-    }
-    .widget-mark{
-      width:22px;height:22px;border-radius:7px 7px 7px 2px;
-      background:var(--lime);display:grid;place-items:center;
-      font-size:12px;color:var(--ink);transform:rotate(-8deg);
-    }
-    .widget-date{font-size:11px;color:#8a908c}
-    .progress-section{
-      display:flex;align-items:center;gap:16px;
-      margin-bottom:16px;position:relative;z-index:1;
-    }
-    .mini-ring{
-      width:56px;height:56px;border-radius:50%;
-      display:grid;place-items:center;
-      background:conic-gradient(var(--lime) 0 0%,#3d4341 0 100%);
-      flex-shrink:0;position:relative;
-    }
-    .mini-ring::after{
-      content:"";width:42px;height:42px;
-      border-radius:50%;background:var(--ink);position:absolute;
-    }
-    .mini-ring strong{font-size:15px;z-index:1;position:relative}
-    .progress-info{flex:1}
-    .progress-info .big{font-size:24px;font-weight:800;letter-spacing:-.05em}
-    .progress-info .sub{font-size:11px;color:#8a908c;margin-top:2px}
-    .task-list{display:flex;flex-direction:column;gap:7px;position:relative;z-index:1}
-    .task-row{
-      display:flex;align-items:center;gap:9px;
-      padding:9px 10px;border-radius:11px;
-      background:rgba(255,255,255,.04);
-      font-size:12px;
-    }
-    .task-row.done .task-label{text-decoration:line-through;color:#5a605e}
-    .task-dot{
-      width:16px;height:16px;border-radius:50%;
-      border:1.5px solid #4a504e;flex-shrink:0;
-      display:grid;place-items:center;font-size:10px;
-    }
-    .task-row.done .task-dot{background:var(--lime);border-color:var(--lime);color:var(--ink)}
-    .task-label{flex:1;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .task-time{font-size:10px;color:#6a706d;flex-shrink:0}
-    .empty-widget{
-      text-align:center;padding:18px 8px;
-      color:#5a605e;font-size:12px;line-height:1.6;
-      position:relative;z-index:1;
-    }
-    .widget-footer{
-      margin-top:14px;text-align:center;
-      position:relative;z-index:1;
-    }
-    .widget-footer a{
-      color:var(--lime);font-size:10px;font-weight:700;
-      text-decoration:none;letter-spacing:.04em;
-    }
+    .w-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .w-brand{font-size:13px;font-weight:700;letter-spacing:-.03em;color:#e8e8e8;display:flex;align-items:center;gap:5px}
+    .w-mark{width:16px;height:16px;border-radius:5px 5px 5px 1px;background:var(--lime);display:grid;place-items:center;font-size:9px;color:#151718;transform:rotate(-8deg)}
+    .w-date{font-size:10px;color:#5a5f5d}
+    .w-progress{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .w-ring{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--lime) 0 0%,#2e3331 0 100%);flex-shrink:0;position:relative}
+    .w-ring::after{content:"";width:32px;height:32px;border-radius:50%;background:#151718;position:absolute}
+    .w-ring strong{font-size:13px;z-index:1;position:relative;color:#e8e8e8}
+    .w-info .w-big{font-size:20px;font-weight:800;letter-spacing:-.04em;color:#e8e8e8}
+    .w-info .w-sub{font-size:10px;color:#5a5f5d;margin-top:1px}
+    .w-tasks{flex:1;display:flex;flex-direction:column;gap:0}
+    .w-task{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid #1e2121;font-size:11px}
+    .w-task:last-child{border-bottom:none}
+    .w-task.done .w-tlabel{text-decoration:line-through;color:#3d4240}
+    .w-dot{width:12px;height:12px;border-radius:50%;border:1.5px solid #3a3f3d;flex-shrink:0;display:grid;place-items:center;font-size:8px}
+    .w-task.done .w-dot{background:var(--lime);border-color:var(--lime);color:#151718}
+    .w-tlabel{flex:1;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .w-ttime{font-size:9px;color:#4a4f4d;flex-shrink:0}
+    .w-more{font-size:10px;color:#4a4f4d;padding:4px 0 0}
+    .w-empty{padding:10px 0;font-size:11px;color:#3d4240;line-height:1.5}
+    .w-foot{margin-top:auto;padding-top:10px}
+    .w-foot span{font-size:9px;color:#4a4f4d;font-weight:600;letter-spacing:.02em}
   </style>
 </head>
-<body>
-  <div class="widget" id="widgetRoot">
-    <div class="widget-header">
-      <div class="widget-brand"><span class="widget-mark">✦</span> flowday</div>
-      <span class="widget-date" id="widgetDate"></span>
-    </div>
-    <div class="progress-section">
-      <div class="mini-ring" id="miniRing"><strong id="miniPercent">0%</strong></div>
-      <div class="progress-info">
-        <div class="big" id="miniDone">0 / 0</div>
-        <div class="sub" id="miniMsg">开始安排这一天</div>
-      </div>
-    </div>
-    <div class="task-list" id="widgetTasks"></div>
-    <div class="widget-footer">
-      <a href="./time-planner.html">打开 Flowday →</a>
+<body id="root">
+  <div class="w-top">
+    <div class="w-brand"><span class="w-mark">✦</span> flowday</div>
+    <span class="w-date" id="wDate"></span>
+  </div>
+  <div class="w-progress">
+    <div class="w-ring" id="wRing"><strong id="wPct">0%</strong></div>
+    <div class="w-info">
+      <div class="w-big" id="wDone">0 / 0</div>
+      <div class="w-sub" id="wMsg">开始安排这一天</div>
     </div>
   </div>
+  <div class="w-tasks" id="wTasks"></div>
+  <div class="w-foot"><span>打开 Flowday</span></div>
   <script>
-    const dateKey = (() => {
-      const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    })();
+    const dk=(()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`})();
+    const wd=['日','一','二','三','四','五','六'];
+    const now=new Date();
+    document.getElementById('wDate').textContent=`星期${wd[now.getDay()]} · ${now.getMonth()+1}/${now.getDate()}`;
 
-    const weekdays = ['日','一','二','三','四','五','六'];
-    const today = new Date();
-    const dateStr = `星期${weekdays[today.getDay()]} · ${today.getMonth()+1}/${today.getDate()}`;
+    function ft(t){if(t.startTime&&t.endTime)return t.startTime+'—'+t.endTime;if(t.startTime)return t.startTime;if(t.time&&t.time!=='待安排')return t.time;return'';}
+    function rm(r,dk){const dow=new Date(dk).getDay();if(r.repeatType==='daily')return true;if(r.repeatType==='weekdays')return dow>=1&&dow<=5;if(r.repeatType==='weekly')return r.weekdays&&r.weekdays.includes(dow);return false;}
+    function eh(v){return v.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
 
-    function formatTime(t) {
-      if (t.startTime && t.endTime) return t.startTime + ' — ' + t.endTime;
-      if (t.startTime) return t.startTime;
-      if (t.time && t.time !== '待安排') return t.time;
-      return '';
-    }
+    try{
+      const plans=JSON.parse(localStorage.getItem('flowday-plans')||'{}');
+      const routines=JSON.parse(localStorage.getItem('flowday-routines')||'[]');
+      const comp=JSON.parse(localStorage.getItem('flowday-routine-completions')||'{}');
+      const pt=(plans[dk]||[]);
+      const rt=routines.filter(r=>rm(r,dk)).map(r=>({title:r.title,startTime:r.startTime,endTime:r.endTime,_routine:true,done:!!(comp[r.id]&&comp[r.id][dk])}));
+      const all=[...pt,...rt];all.sort((a,b)=>{const ta=a.startTime||'99:99',tb=b.startTime||'99:99';return ta.localeCompare(tb)});
+      const done=all.filter(t=>t.done).length,total=all.length,pct=total?Math.round(done/total*100):0;
 
-    function routineMatches(r, dk) {
-      const dow = new Date(dk).getDay();
-      if (r.repeatType === 'daily') return true;
-      if (r.repeatType === 'weekdays') return dow >= 1 && dow <= 5;
-      if (r.repeatType === 'weekly') return r.weekdays && r.weekdays.includes(dow);
-      return false;
-    }
+      document.getElementById('wPct').textContent=pct+'%';
+      document.getElementById('wDone').textContent=`${done} / ${total}`;
+      document.getElementById('wMsg').textContent=!total?'暂无任务':pct===100?'全部完成':'还有 '+(total-done)+' 项待完成';
+      document.getElementById('wRing').style.background=`conic-gradient(#d9f75b 0 ${pct}%,#2e3331 ${pct}% 100%)`;
 
-    try {
-      const plans = JSON.parse(localStorage.getItem('flowday-plans') || '{}');
-      const routines = JSON.parse(localStorage.getItem('flowday-routines') || '[]');
-      const completions = JSON.parse(localStorage.getItem('flowday-routine-completions') || '{}');
-
-      const planTasks = (plans[dateKey] || []).map(t => ({ ...t, _isRoutine: false }));
-
-      const routineTasks = routines
-        .filter(r => routineMatches(r, dateKey))
-        .map(r => ({
-          title: r.title,
-          startTime: r.startTime,
-          endTime: r.endTime,
-          location: r.location,
-          tag: r.tag,
-          kind: r.kind,
-          _isRoutine: true,
-          done: !!(completions[r.id] && completions[r.id][dateKey])
-        }));
-
-      const allTasks = [...planTasks, ...routineTasks];
-      allTasks.sort((a, b) => {
-        const ta = a.startTime || '99:99';
-        const tb = b.startTime || '99:99';
-        return ta.localeCompare(tb);
-      });
-
-      const done = allTasks.filter(t => t.done).length;
-      const total = allTasks.length;
-      const percent = total ? Math.round(done/total*100) : 0;
-
-      document.getElementById('widgetDate').textContent = dateStr;
-      document.getElementById('miniPercent').textContent = percent + '%';
-      document.getElementById('miniDone').textContent = `${done} / ${total}`;
-      document.getElementById('miniMsg').textContent = !total ? '暂无任务' : percent===100 ? '全部完成 🎉' : `${total-done} 项待完成`;
-      document.getElementById('miniRing').style.background = `conic-gradient(#d9f75b 0 ${percent}%,#3d4341 ${percent}% 100%)`;
-
-      const list = document.getElementById('widgetTasks');
-      if (!allTasks.length) {
-        list.innerHTML = '<div class="empty-widget">今天还没有安排<br>打开 Flowday 规划一天吧</div>';
-      } else {
-        const showTasks = allTasks.slice(0, 4);
-        list.innerHTML = showTasks.map(t => `
-          <div class="task-row ${t.done?'done':''}">
-            <div class="task-dot">${t.done?'✓':''}</div>
-            <span class="task-label">${t._isRoutine?'🔄 ':''}${escapeHtml(t.title)}</span>
-            <span class="task-time">${escapeHtml(formatTime(t))}</span>
-          </div>
-        `).join('');
-        if (allTasks.length > 4) {
-          list.innerHTML += `<div style="font-size:10px;color:#6a706d;text-align:center;padding:4px">还有 ${allTasks.length-4} 项…</div>`;
-        }
+      const list=document.getElementById('wTasks');
+      if(!all.length){list.innerHTML='<div class="w-empty">还没有安排<br>打开 Flowday 规划一天</div>';}
+      else{
+        const show=all.slice(0,3);
+        list.innerHTML=show.map(t=>`<div class="w-task ${t.done?'done':''}"><div class="w-dot">${t.done?'✓':''}</div><span class="w-tlabel">${t._routine?'🔄':''} ${eh(t.title)}</span><span class="w-ttime">${eh(ft(t))}</span></div>`).join('');
+        if(all.length>3)list.innerHTML+=`<div class="w-more">+${all.length-3} 项</div>`;
       }
-    } catch(e) {
-      document.getElementById('widgetTasks').innerHTML = '<div class="empty-widget">无法加载任务<br>请打开 Flowday 应用</div>';
-    }
+    }catch(e){document.getElementById('wTasks').innerHTML='<div class="w-empty">无法加载<br>请打开 Flowday</div>';}
 
-    function escapeHtml(v) {
-      return v.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-    }
-
-    document.getElementById('widgetRoot').addEventListener('click', () => {
-      window.open('./time-planner.html', '_top');
-    });
+    document.getElementById('root').addEventListener('click',()=>{window.open('./time-planner.html','_top');});
   </script>
 </body>
 </html>
