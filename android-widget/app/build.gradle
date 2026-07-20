@@ -27,6 +27,6 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    // Minimal — no AppCompat, no Kotlin
     implementation 'androidx.core:core:1.12.0'
 }
