@@ -312,17 +312,37 @@
     // Migrate legacy tasks too
     if (legacyTasks) plans[todayKey] = legacyTasks.map(migrateTask);
 
-    const savePlans = () => localStorage.setItem('flowday-plans', JSON.stringify(plans));
+    const savePlans = () => { localStorage.setItem('flowday-plans', JSON.stringify(plans)); syncToWidget(); };
     const tasksForSelected = () => plans[selectedKey] || [];
     const isToday = () => selectedKey === todayKey;
     const dateLabel = key => parseDate(key).toLocaleDateString('zh-CN',{month:'long',day:'numeric'});
     const fullDateLabel = key => {const d=parseDate(key);return `星期${weekdays[d.getDay()]} · ${d.getFullYear()} / ${String(d.getMonth()+1).padStart(2,'0')} / ${String(d.getDate()).padStart(2,'0')}`};
 
+    // ── Widget sync ─────────────────────────────────────
+    function syncToWidget() {
+      try {
+        const allItems = getAllItemsForDate(todayKey);
+        const done = allItems.filter(t => t.done).length;
+        const payload = JSON.stringify({
+          tasks: allItems.map(t => ({
+            title: t.title, startTime: t.startTime||'', endTime: t.endTime||'',
+            location: t.location||'', done: t.done
+          })),
+          done, total: allItems.length, date: todayKey
+        });
+        fetch('http://localhost:18765/update', {
+          method: 'POST', mode: 'cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload
+        }).catch(() => {}); // silent if widget not installed
+      } catch (e) {}
+    }
+
     // ── Routine storage ─────────────────────────────────
     let routines = JSON.parse(localStorage.getItem('flowday-routines') || '[]');
     let routineCompletions = JSON.parse(localStorage.getItem('flowday-routine-completions') || '{}');
-    const saveRoutines = () => localStorage.setItem('flowday-routines', JSON.stringify(routines));
-    const saveRoutineCompletions = () => localStorage.setItem('flowday-routine-completions', JSON.stringify(routineCompletions));
+    const saveRoutines = () => { localStorage.setItem('flowday-routines', JSON.stringify(routines)); syncToWidget(); };
+    const saveRoutineCompletions = () => { localStorage.setItem('flowday-routine-completions', JSON.stringify(routineCompletions)); syncToWidget(); };
 
     // ── Time utilities ──────────────────────────────────
     function calcEndTime(startTime, durMinutes) {
