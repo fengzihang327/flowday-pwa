@@ -326,7 +326,7 @@
         const payload = JSON.stringify({
           tasks: allItems.map(t => ({
             title: t.title, startTime: t.startTime||'', endTime: t.endTime||'',
-            location: t.location||'', done: t.done
+            location: t.location||'', done: t.done, kind: t.kind||''
           })),
           done, total: allItems.length, date: todayKey
         });
