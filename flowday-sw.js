@@ -1,9 +1,10 @@
-const cacheName = 'flowday-v4';
+const cacheName = 'flowday-v5';
 const appFiles = [
   './',
   './index.html',
   './time-planner.html',
   './widget.html',
+  './widget.webmanifest',
   './flowday.webmanifest',
   './flowday-icon.svg'
 ];

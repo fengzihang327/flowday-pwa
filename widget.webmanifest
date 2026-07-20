@@ -1,0 +1,18 @@
+{
+  "name": "Flowday 今日概览",
+  "short_name": "Flowday",
+  "description": "今日任务进度概览小组件",
+  "lang": "zh-CN",
+  "start_url": "./widget.html",
+  "display": "standalone",
+  "background_color": "#151718",
+  "theme_color": "#151718",
+  "icons": [
+    {
+      "src": "flowday-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
