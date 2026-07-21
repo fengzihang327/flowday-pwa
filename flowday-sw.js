@@ -1,4 +1,4 @@
-const cacheName = 'flowday-v5';
+const cacheName = 'flowday-v6';
 const appFiles = [
   './',
   './index.html',
@@ -34,25 +34,40 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// ── Message handler for notifications ────────────────
+// ── Message handler ──────────────────────────────────
 self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'showNotification') {
-    const { title, options } = event.data;
+  const data = event.data;
+  if (!data) return;
+
+  if (data.type === 'showNotification') {
+    // Show notification with sound/vibration from SW context (more reliable)
+    const { title, options } = data;
     self.registration.showNotification(title, options);
+  }
+
+  if (data.type === 'clearNotifications') {
+    // Clear all pending flowday notifications
+    self.registration.getNotifications().then(notifications => {
+      notifications.forEach(n => {
+        if (n.tag && n.tag.startsWith('flowday-task')) n.close();
+      });
+    });
   }
 });
 
 // ── Notification click ───────────────────────────────
 self.addEventListener('notificationclick', event => {
   event.notification.close();
+
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-      // Focus existing window or open new one
+      // Try to focus an existing window
       for (const client of clientList) {
         if (client.url.includes('time-planner.html') && 'focus' in client) {
           return client.focus();
         }
       }
+      // Open new window
       if (clients.openWindow) {
         return clients.openWindow('./time-planner.html');
       }
@@ -60,7 +75,7 @@ self.addEventListener('notificationclick', event => {
   );
 });
 
-// ── Periodic background sync (if supported) ──────────
+// ── Periodic sync ────────────────────────────────────
 self.addEventListener('periodicsync', event => {
   if (event.tag === 'flowday-check') {
     event.waitUntil(checkAndNotify());
@@ -68,8 +83,7 @@ self.addEventListener('periodicsync', event => {
 });
 
 async function checkAndNotify() {
-  // This runs in the background - can't access localStorage directly,
-  // but can use IndexedDB or Cache storage to check pending tasks
-  // For now, this is a placeholder that could be extended
+  // Background check - SW can't read localStorage directly
+  // In the future, could use IndexedDB to store notification times
   console.log('[Flowday SW] Periodic sync fired');
 }

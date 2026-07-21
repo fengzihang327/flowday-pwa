@@ -401,6 +401,7 @@
 
     // ── Notification ────────────────────────────────────
     let notifyPermission = 'default';
+    let scheduledTimers = [];
 
     function checkNotifyPermission() {
       if ('Notification' in window) notifyPermission = Notification.permission;
@@ -421,41 +422,108 @@
         const result = await Notification.requestPermission();
         notifyPermission = result;
         updateNotifyUI();
-        if (result === 'granted') { showToast('✅ 通知已开启'); scheduleAllNotifications(); }
-        else showToast('通知未开启，可稍后在设置中打开');
+        if (result === 'granted') {
+          // Show a test notification immediately
+          showTaskNotification({title:'Flowday 通知已开启', startTime:'', endTime:'', location:''}, true);
+          showToast('✅ 通知已开启，任务到时间会响铃提醒');
+          scheduleAllNotifications();
+        } else {
+          showToast('通知未开启，请到系统设置中打开');
+        }
       } catch (e) { showToast('通知权限请求失败'); }
     }
 
     function scheduleAllNotifications() {
+      // Clear previous timers
+      scheduledTimers.forEach(t => clearTimeout(t));
+      scheduledTimers = [];
       if (notifyPermission !== 'granted') return;
+
+      // Also notify service worker to schedule
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({ type: 'clearNotifications' });
+      }
+
       const allItems = getAllItemsForDate(todayKey);
-      allItems.forEach(item => {
+      const now = new Date();
+
+      allItems.forEach((item, idx) => {
         if (item.done || !item.startTime) return;
         const m = item.startTime.match(/(\d{1,2}):(\d{2})/);
         if (!m) return;
-        const now = new Date();
-        const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(m[1]), parseInt(m[2]), 0);
-        const delay = target.getTime() - 5 * 60 * 1000 - now.getTime();
+        const [h, min] = [parseInt(m[1]), parseInt(m[2])];
+        const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, min, 0);
+
+        // Notify 5 min before task
+        const notifyTime = target.getTime() - 5 * 60 * 1000;
+        const delay = notifyTime - now.getTime();
+
         if (delay > 0 && delay < 24 * 60 * 60 * 1000) {
-          setTimeout(() => { showTaskNotification(item); }, delay);
+          const timer = setTimeout(() => { showTaskNotification(item); }, delay);
+          scheduledTimers.push(timer);
         }
       });
+
+      // Update summary of next notification
+      updateNextNotifyInfo(allItems);
     }
 
-    function showTaskNotification(item) {
-      if (notifyPermission !== 'granted') return;
-      const body = (item.location ? `📍 ${item.location} · ` : '') + `🕐 ${formatTimeRange(item)}`;
+    function updateNextNotifyInfo(items) {
+      const now = new Date();
+      let nextItem = null, nextDelay = Infinity;
+      items.forEach(item => {
+        if (item.done || !item.startTime) return;
+        const m = item.startTime.match(/(\d{1,2}):(\d{2})/);
+        if (!m) return;
+        const [h, min] = [parseInt(m[1]), parseInt(m[2])];
+        const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, min, 0);
+        const delay = target.getTime() - 5 * 60 * 1000 - now.getTime();
+        if (delay > 0 && delay < nextDelay) { nextDelay = delay; nextItem = item; }
+      });
+      const badge = $('notifyBadge');
+      if (nextItem && notifyPermission === 'granted') {
+        badge.style.display = 'block';
+        badge.title = `下次提醒: ${nextItem.title} @ ${nextItem.startTime}`;
+      } else if (notifyPermission === 'granted') {
+        badge.style.display = 'none';
+      }
+    }
+
+    function showTaskNotification(item, isTest) {
+      if (notifyPermission !== 'granted' && !isTest) return;
+
+      const title = isTest ? '✅ ' + item.title : '⏰ ' + item.title;
+      const body = isTest ? '任务提醒功能已就绪，到时间会响铃通知你'
+        : (item.location ? '📍 ' + item.location + ' · ' : '') + '🕐 ' + (formatTimeRange(item) || '待安排');
+
+      const tag = isTest ? 'flowday-test' : 'flowday-task-' + item.title.replace(/\s/g, '-');
+
       const options = {
-        body, icon: 'flowday-icon.svg', badge: 'flowday-icon.svg',
-        tag: 'flowday-task', vibrate: [200, 100, 200], requireInteraction: true, silent: false
+        body,
+        icon: 'flowday-icon.svg',
+        badge: 'flowday-icon.svg',
+        tag,
+        vibrate: [300, 100, 300, 100, 300],
+        requireInteraction: !isTest,
+        silent: false,
+        renotify: true,
+        data: { url: './time-planner.html', title: item.title }
       };
+
+      // Send to service worker for reliable background delivery
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'showNotification',
+          title, options
+        });
+      }
+
+      // Also try direct notification
       try {
-        const n = new Notification('⏰ ' + item.title, options);
-        n.onclick = () => { n.close(); window.focus(); };
+        const n = new Notification(title, options);
+        n.onclick = () => { n.close(); clients.openWindow('./time-planner.html'); };
       } catch (e) {
-        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage({ type: 'showNotification', title: '⏰ ' + item.title, options });
-        }
+        // SW fallback already sent above
       }
     }
 
@@ -1057,8 +1125,19 @@ ${taskList}${rInfo}`;
 
     // Notification
     $('notifyBtn').onclick = () => {
-      if (notifyPermission === 'granted') showToast('通知已开启 ✅ 任务到时间会提醒你');
-      else requestNotification();
+      if (notifyPermission === 'granted') {
+        const allItems = getAllItemsForDate(todayKey);
+        const pending = allItems.filter(t => !t.done && t.startTime).length;
+        if (pending > 0) {
+          // Show a test notification so user can verify sound works
+          showTaskNotification({title:'测试提醒 — 这是通知效果预览', startTime:'', endTime:'', location:''}, true);
+          showToast(`🔔 已开启 · ${pending} 个任务到时间会响铃`);
+        } else {
+          showToast('🔔 已开启 · 今天没有待提醒的任务');
+        }
+      } else {
+        requestNotification();
+      }
     };
     $('enableNotify').onclick = () => requestNotification();
 
