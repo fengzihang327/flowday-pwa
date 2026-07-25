@@ -7,6 +7,33 @@
     android:background="@drawable/widget_bg"
     android:padding="12dp">
 
+    <!-- Brand row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="6dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="✦ flowday"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/w_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#5a5f5d"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <!-- Progress -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,121 +42,172 @@
         android:layout_marginBottom="8dp">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="✦ flowday"
-            android:textColor="#ffffff"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <TextView
             android:id="@+id/w_percent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0%"
             android:textColor="#d9f75b"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="10dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/w_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 / 0"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/w_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="暂无任务"
+                android:textColor="#888c8a"
+                android:textSize="11sp" />
+        </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/w_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 / 0"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/w_msg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="暂无任务"
-        android:textColor="#888c8a"
-        android:textSize="11sp"
-        android:layout_marginBottom="8dp" />
-
+    <!-- Task rows (5 slots with colored blocks) -->
     <LinearLayout
-        android:id="@+id/w_tasks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <!-- Row 1 -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical"
-            android:paddingVertical="3dp">
-            <TextView android:id="@+id/w_dot1" android:layout_width="12dp" android:layout_height="12dp"
-                android:layout_marginEnd="8dp" android:background="@drawable/dot_default"
-                android:text="" android:textColor="#151718" android:textSize="8sp" android:gravity="center" />
-            <TextView android:id="@+id/w_label1" android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="" android:textColor="#d0d3d1"
-                android:textSize="12sp" android:textStyle="bold"
+        <LinearLayout android:id="@+id/w_row1"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="3dp" android:paddingHorizontal="6dp"
+            android:layout_marginBottom="3dp">
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:id="@+id/w_dot1" android:layout_width="0dp" android:layout_height="0dp"
+                    android:visibility="gone" />
+                <TextView android:id="@+id/w_label1"
+                    android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                    android:text="" android:textColor="#e8e8e8"
+                    android:textSize="12sp" android:textStyle="bold"
+                    android:maxLines="1" android:ellipsize="end" />
+                <TextView android:id="@+id/w_time1"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="" android:textColor="#d0d3d1" android:textSize="10sp" />
+            </LinearLayout>
+            <TextView android:id="@+id/w_loc1"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="" android:textColor="#6a706d" android:textSize="9sp"
                 android:maxLines="1" android:ellipsize="end" />
-            <TextView android:id="@+id/w_time1" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="" android:textColor="#6a706d" android:textSize="10sp" />
         </LinearLayout>
 
         <!-- Row 2 -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical"
-            android:paddingVertical="3dp">
-            <TextView android:id="@+id/w_dot2" android:layout_width="12dp" android:layout_height="12dp"
-                android:layout_marginEnd="8dp" android:background="@drawable/dot_default"
-                android:text="" android:textColor="#151718" android:textSize="8sp" android:gravity="center" />
-            <TextView android:id="@+id/w_label2" android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="" android:textColor="#d0d3d1"
-                android:textSize="12sp" android:textStyle="bold"
+        <LinearLayout android:id="@+id/w_row2"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="3dp" android:paddingHorizontal="6dp"
+            android:layout_marginBottom="3dp">
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:id="@+id/w_dot2" android:layout_width="0dp" android:layout_height="0dp"
+                    android:visibility="gone" />
+                <TextView android:id="@+id/w_label2"
+                    android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                    android:text="" android:textColor="#e8e8e8"
+                    android:textSize="12sp" android:textStyle="bold"
+                    android:maxLines="1" android:ellipsize="end" />
+                <TextView android:id="@+id/w_time2"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="" android:textColor="#d0d3d1" android:textSize="10sp" />
+            </LinearLayout>
+            <TextView android:id="@+id/w_loc2"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="" android:textColor="#6a706d" android:textSize="9sp"
                 android:maxLines="1" android:ellipsize="end" />
-            <TextView android:id="@+id/w_time2" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="" android:textColor="#6a706d" android:textSize="10sp" />
         </LinearLayout>
 
         <!-- Row 3 -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical"
-            android:paddingVertical="3dp">
-            <TextView android:id="@+id/w_dot3" android:layout_width="12dp" android:layout_height="12dp"
-                android:layout_marginEnd="8dp" android:background="@drawable/dot_default"
-                android:text="" android:textColor="#151718" android:textSize="8sp" android:gravity="center" />
-            <TextView android:id="@+id/w_label3" android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="" android:textColor="#d0d3d1"
-                android:textSize="12sp" android:textStyle="bold"
+        <LinearLayout android:id="@+id/w_row3"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="3dp" android:paddingHorizontal="6dp"
+            android:layout_marginBottom="3dp">
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:id="@+id/w_dot3" android:layout_width="0dp" android:layout_height="0dp"
+                    android:visibility="gone" />
+                <TextView android:id="@+id/w_label3"
+                    android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                    android:text="" android:textColor="#e8e8e8"
+                    android:textSize="12sp" android:textStyle="bold"
+                    android:maxLines="1" android:ellipsize="end" />
+                <TextView android:id="@+id/w_time3"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="" android:textColor="#d0d3d1" android:textSize="10sp" />
+            </LinearLayout>
+            <TextView android:id="@+id/w_loc3"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="" android:textColor="#6a706d" android:textSize="9sp"
                 android:maxLines="1" android:ellipsize="end" />
-            <TextView android:id="@+id/w_time3" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="" android:textColor="#6a706d" android:textSize="10sp" />
         </LinearLayout>
 
         <!-- Row 4 -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical"
-            android:paddingVertical="3dp">
-            <TextView android:id="@+id/w_dot4" android:layout_width="12dp" android:layout_height="12dp"
-                android:layout_marginEnd="8dp" android:background="@drawable/dot_default"
-                android:text="" android:textColor="#151718" android:textSize="8sp" android:gravity="center" />
-            <TextView android:id="@+id/w_label4" android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="" android:textColor="#d0d3d1"
-                android:textSize="12sp" android:textStyle="bold"
+        <LinearLayout android:id="@+id/w_row4"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="3dp" android:paddingHorizontal="6dp"
+            android:layout_marginBottom="3dp">
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:id="@+id/w_dot4" android:layout_width="0dp" android:layout_height="0dp"
+                    android:visibility="gone" />
+                <TextView android:id="@+id/w_label4"
+                    android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                    android:text="" android:textColor="#e8e8e8"
+                    android:textSize="12sp" android:textStyle="bold"
+                    android:maxLines="1" android:ellipsize="end" />
+                <TextView android:id="@+id/w_time4"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="" android:textColor="#d0d3d1" android:textSize="10sp" />
+            </LinearLayout>
+            <TextView android:id="@+id/w_loc4"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="" android:textColor="#6a706d" android:textSize="9sp"
                 android:maxLines="1" android:ellipsize="end" />
-            <TextView android:id="@+id/w_time4" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="" android:textColor="#6a706d" android:textSize="10sp" />
         </LinearLayout>
 
         <!-- Row 5 -->
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical"
-            android:paddingVertical="3dp">
-            <TextView android:id="@+id/w_dot5" android:layout_width="12dp" android:layout_height="12dp"
-                android:layout_marginEnd="8dp" android:background="@drawable/dot_default"
-                android:text="" android:textColor="#151718" android:textSize="8sp" android:gravity="center" />
-            <TextView android:id="@+id/w_label5" android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="" android:textColor="#d0d3d1"
-                android:textSize="12sp" android:textStyle="bold"
+        <LinearLayout android:id="@+id/w_row5"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="3dp" android:paddingHorizontal="6dp"
+            android:layout_marginBottom="3dp">
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical">
+                <TextView android:id="@+id/w_dot5" android:layout_width="0dp" android:layout_height="0dp"
+                    android:visibility="gone" />
+                <TextView android:id="@+id/w_label5"
+                    android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                    android:text="" android:textColor="#e8e8e8"
+                    android:textSize="12sp" android:textStyle="bold"
+                    android:maxLines="1" android:ellipsize="end" />
+                <TextView android:id="@+id/w_time5"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="" android:textColor="#d0d3d1" android:textSize="10sp" />
+            </LinearLayout>
+            <TextView android:id="@+id/w_loc5"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="" android:textColor="#6a706d" android:textSize="9sp"
                 android:maxLines="1" android:ellipsize="end" />
-            <TextView android:id="@+id/w_time5" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="" android:textColor="#6a706d" android:textSize="10sp" />
         </LinearLayout>
 
     </LinearLayout>

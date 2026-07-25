@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
@@ -17,6 +18,30 @@ public class FlowdayWidget extends AppWidgetProvider {
 
     private static final String PREFS_NAME = "flowday_data";
     private static final int MAX_TASKS = 5;
+    private static final String[] WD = {"日","一","二","三","四","五","六"};
+
+    // Kind colors for task blocks
+    private static int kindColor(String kind) {
+        if (kind == null) return Color.parseColor("#2a2e2c");
+        switch (kind) {
+            case "focus":  return Color.parseColor("#3d2018"); // dark orange bg
+            case "work":   return Color.parseColor("#1a2e20"); // dark green bg
+            case "health": return Color.parseColor("#162238"); // dark blue bg
+            case "life":   return Color.parseColor("#261e33"); // dark purple bg
+            default:       return Color.parseColor("#2a2e2c"); // dark gray bg
+        }
+    }
+
+    private static int kindTextColor(String kind) {
+        if (kind == null) return Color.parseColor("#c5c8c7");
+        switch (kind) {
+            case "focus":  return Color.parseColor("#ff9578");
+            case "work":   return Color.parseColor("#6de594");
+            case "health": return Color.parseColor("#7ab8f5");
+            case "life":   return Color.parseColor("#c0a0f5");
+            default:       return Color.parseColor("#c5c8c7");
+        }
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -33,14 +58,20 @@ public class FlowdayWidget extends AppWidgetProvider {
         }
     }
 
-    private static int dotForKind(String kind) {
-        if (kind == null) return R.drawable.dot_default;
-        switch (kind) {
-            case "focus":  return R.drawable.dot_focus;
-            case "work":   return R.drawable.dot_work;
-            case "health": return R.drawable.dot_health;
-            case "life":   return R.drawable.dot_life;
-            default:       return R.drawable.dot_default;
+    private static String formatDate(String dateKey) {
+        try {
+            if (dateKey == null || dateKey.isEmpty()) return "";
+            String[] parts = dateKey.split("-");
+            if (parts.length != 3) return dateKey;
+            int y = Integer.parseInt(parts[0]);
+            int m = Integer.parseInt(parts[1]);
+            int d = Integer.parseInt(parts[2]);
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.set(y, m - 1, d);
+            int dow = cal.get(java.util.Calendar.DAY_OF_WEEK) - 1; // Sun=0
+            return "周" + WD[dow] + " · " + m + "/" + d;
+        } catch (Exception e) {
+            return dateKey != null ? dateKey : "";
         }
     }
 
@@ -56,16 +87,22 @@ public class FlowdayWidget extends AppWidgetProvider {
             int done = data.optInt("done", 0);
             int total = data.optInt("total", 0);
             int pct = total > 0 ? Math.round((float) done / total * 100) : 0;
+            String dateKey = data.optString("date", "");
 
+            // Set date
+            views.setTextViewText(R.id.w_date, formatDate(dateKey));
+
+            // Progress
             views.setTextViewText(R.id.w_percent, pct + "%");
             views.setTextViewText(R.id.w_done, done + " / " + total);
             views.setTextViewText(R.id.w_msg, total == 0 ? "暂无任务"
-                : pct == 100 ? "全部完成 🎉"
+                : pct == 100 ? "全部完成"
                 : "剩余 " + (total - done) + " 项");
 
-            int[] dotIds   = {R.id.w_dot1, R.id.w_dot2, R.id.w_dot3, R.id.w_dot4, R.id.w_dot5};
+            int[] rowIds   = {R.id.w_row1, R.id.w_row2, R.id.w_row3, R.id.w_row4, R.id.w_row5};
             int[] labelIds = {R.id.w_label1, R.id.w_label2, R.id.w_label3, R.id.w_label4, R.id.w_label5};
             int[] timeIds  = {R.id.w_time1, R.id.w_time2, R.id.w_time3, R.id.w_time4, R.id.w_time5};
+            int[] locIds   = {R.id.w_loc1, R.id.w_loc2, R.id.w_loc3, R.id.w_loc4, R.id.w_loc5};
 
             if (tasks != null && tasks.length() > 0) {
                 int count = Math.min(tasks.length(), MAX_TASKS);
@@ -75,25 +112,35 @@ public class FlowdayWidget extends AppWidgetProvider {
                     String title = t.optString("title", "");
                     String start = t.optString("startTime", "");
                     String end = t.optString("endTime", "");
+                    String loc = t.optString("location", "");
                     String kind = t.optString("kind", "");
+
                     String timeStr = "";
                     if (!start.isEmpty() && !end.isEmpty()) timeStr = start + "—" + end;
                     else if (!start.isEmpty()) timeStr = start;
 
-                    views.setInt(dotIds[i], "setBackgroundResource",
-                            isDone ? R.drawable.dot_done : dotForKind(kind));
-                    // Strike-through for done tasks
-                    String displayTitle = isDone ? title : title;
+                    // Set colored background block for the row
+                    int bgColor = isDone ? Color.parseColor("#1a1d1c") : kindColor(kind);
+                    views.setInt(rowIds[i], "setBackgroundColor", bgColor);
+
+                    // Title with kind-based text color
+                    int textColor = isDone ? Color.parseColor("#5a5f5d") : kindTextColor(kind);
+                    String displayTitle = isDone ? "✓ " + title : title;
                     views.setTextViewText(labelIds[i], displayTitle);
+                    views.setTextColor(labelIds[i], textColor);
+
+                    // Time
                     views.setTextViewText(timeIds[i], timeStr);
-                    views.setInt(labelIds[i], "setVisibility", android.view.View.VISIBLE);
-                    views.setInt(timeIds[i], "setVisibility", android.view.View.VISIBLE);
-                    views.setInt(dotIds[i], "setVisibility", android.view.View.VISIBLE);
+                    views.setTextColor(timeIds[i], isDone ? Color.parseColor("#4a4f4d") : Color.parseColor("#a0a5a3"));
+
+                    // Location
+                    String locText = !loc.isEmpty() ? "📍 " + loc : "";
+                    views.setTextViewText(locIds[i], locText);
+
+                    views.setInt(rowIds[i], "setVisibility", android.view.View.VISIBLE);
                 }
                 for (int i = count; i < MAX_TASKS; i++) {
-                    views.setInt(labelIds[i], "setVisibility", android.view.View.GONE);
-                    views.setInt(timeIds[i], "setVisibility", android.view.View.GONE);
-                    views.setInt(dotIds[i], "setVisibility", android.view.View.GONE);
+                    views.setInt(rowIds[i], "setVisibility", android.view.View.GONE);
                 }
                 views.setInt(R.id.w_more, "setVisibility",
                         tasks.length() > MAX_TASKS ? android.view.View.VISIBLE : android.view.View.GONE);
@@ -105,9 +152,7 @@ public class FlowdayWidget extends AppWidgetProvider {
                 views.setInt(R.id.w_empty, "setVisibility", android.view.View.VISIBLE);
                 views.setInt(R.id.w_more, "setVisibility", android.view.View.GONE);
                 for (int i = 0; i < MAX_TASKS; i++) {
-                    views.setInt(labelIds[i], "setVisibility", android.view.View.GONE);
-                    views.setInt(timeIds[i], "setVisibility", android.view.View.GONE);
-                    views.setInt(dotIds[i], "setVisibility", android.view.View.GONE);
+                    views.setInt(rowIds[i], "setVisibility", android.view.View.GONE);
                 }
             }
 

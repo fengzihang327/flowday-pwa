@@ -440,8 +440,12 @@
       if (notifyPermission !== 'granted') return;
 
       // Also notify service worker to schedule
-      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({ type: 'clearNotifications' });
+      if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+        navigator.serviceWorker.ready.then(reg => {
+          if (reg.active) {
+            reg.active.postMessage({ type: 'clearNotifications' });
+          }
+        });
       }
 
       const allItems = getAllItemsForDate(todayKey);
@@ -459,13 +463,55 @@
         const delay = notifyTime - now.getTime();
 
         if (delay > 0 && delay < 24 * 60 * 60 * 1000) {
-          const timer = setTimeout(() => { showTaskNotification(item); }, delay);
+          // Page-level timer (works while app is open)
+          const timer = setTimeout(() => { showTaskNotificationSW(item); }, delay);
           scheduledTimers.push(timer);
+
+          // Also schedule in Service Worker (more reliable for background)
+          navigator.serviceWorker.ready.then(reg => {
+            if (reg.active) {
+              reg.active.postMessage({
+                type: 'showNotification',
+                delay,
+                id: 'task-' + idx + '-' + todayKey,
+                title: '⏰ ' + item.title,
+                options: buildNotifyOptions(item)
+              });
+            }
+          });
         }
       });
 
-      // Update summary of next notification
       updateNextNotifyInfo(allItems);
+    }
+
+    function buildNotifyOptions(item) {
+      return {
+        body: (item.location ? '📍 ' + item.location + ' · ' : '') + '🕐 ' + (formatTimeRange(item) || ''),
+        icon: 'flowday-icon.svg',
+        badge: 'flowday-icon.svg',
+        tag: 'flowday-task-' + item.title.replace(/\s/g, '-'),
+        vibrate: [300, 100, 300, 100, 300],
+        requireInteraction: true,
+        silent: false,
+        renotify: true
+      };
+    }
+
+    function showTaskNotificationSW(item) {
+      if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+        navigator.serviceWorker.ready.then(reg => {
+          if (reg.active) {
+            reg.active.postMessage({
+              type: 'showNotification',
+              delay: 0,
+              id: 'direct-' + Date.now(),
+              title: '⏰ ' + item.title,
+              options: buildNotifyOptions(item)
+            });
+          }
+        });
+      }
     }
 
     function updateNextNotifyInfo(items) {
@@ -493,38 +539,37 @@
       if (notifyPermission !== 'granted' && !isTest) return;
 
       const title = isTest ? '✅ ' + item.title : '⏰ ' + item.title;
-      const body = isTest ? '任务提醒功能已就绪，到时间会响铃通知你'
-        : (item.location ? '📍 ' + item.location + ' · ' : '') + '🕐 ' + (formatTimeRange(item) || '待安排');
+      const body = isTest ? '任务提醒功能已就绪'
+        : (item.location ? '📍 ' + item.location + ' · ' : '') + '🕐 ' + (formatTimeRange(item) || '');
 
       const tag = isTest ? 'flowday-test' : 'flowday-task-' + item.title.replace(/\s/g, '-');
 
-      const options = {
-        body,
-        icon: 'flowday-icon.svg',
-        badge: 'flowday-icon.svg',
-        tag,
-        vibrate: [300, 100, 300, 100, 300],
-        requireInteraction: !isTest,
-        silent: false,
-        renotify: true,
-        data: { url: './time-planner.html', title: item.title }
-      };
+      // Always route through Service Worker for reliability
+      navigator.serviceWorker.ready.then(reg => {
+        if (reg.active) {
+          reg.active.postMessage({
+            type: 'showNotification',
+            delay: 0,
+            title, options: {
+              body, icon: 'flowday-icon.svg', badge: 'flowday-icon.svg', tag,
+              vibrate: [300, 100, 300, 100, 300],
+              requireInteraction: !isTest,
+              silent: false,
+              renotify: true
+            }
+          });
+        }
+      });
 
-      // Send to service worker for reliable background delivery
-      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({
-          type: 'showNotification',
-          title, options
-        });
-      }
-
-      // Also try direct notification
+      // Backup: direct notification
       try {
-        const n = new Notification(title, options);
-        n.onclick = () => { n.close(); clients.openWindow('./time-planner.html'); };
-      } catch (e) {
-        // SW fallback already sent above
-      }
+        const n = new Notification(title, {
+          body, icon: 'flowday-icon.svg', badge: 'flowday-icon.svg', tag,
+          vibrate: [300, 100, 300, 100, 300],
+          requireInteraction: !isTest, silent: false, renotify: true
+        });
+        n.onclick = () => { n.close(); window.focus(); };
+      } catch (e) {}
     }
 
     // ── Long-press delete ──────────────────────────────
