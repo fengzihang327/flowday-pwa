@@ -161,20 +161,34 @@ public class FlowdayWidget extends AppWidgetProvider {
             views.setInt(R.id.w_empty, "setVisibility", android.view.View.VISIBLE);
         }
 
-        String pwaUrl = "https://fengzihang327.github.io/flowday-pwa/time-planner.html";
+        // Try to launch PWA in standalone mode
+        String pwaUrl = "https://fengzihang327.github.io/flowday-pwa/";
         Intent openIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pwaUrl));
-        openIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        openIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        openIntent.addCategory(Intent.CATEGORY_BROWSABLE);
 
-        // Find the best handler — prefer Samsung Internet or Chrome for PWA launch
+        // Search all installed apps for one that can handle our PWA URL as LAUNCHER
         android.content.pm.PackageManager pm = context.getPackageManager();
-        android.content.pm.ResolveInfo best = null;
-        for (android.content.pm.ResolveInfo ri : pm.queryIntentActivities(openIntent, 0)) {
-            String pkg = ri.activityInfo.packageName;
-            if (pkg.equals("com.sec.android.app.sbrowser")) { best = ri; break; }
-            if (pkg.equals("com.android.chrome") && best == null) { best = ri; }
+        Intent launcherIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pwaUrl));
+        launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        launcherIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+        java.util.List<android.content.pm.ResolveInfo> handlers = pm.queryIntentActivities(launcherIntent,
+                android.content.pm.PackageManager.MATCH_DEFAULT_ONLY);
+
+        // Prefer Samsung Internet or Chrome
+        String targetPkg = null;
+        for (android.content.pm.ResolveInfo ri : handlers) {
+            String p = ri.activityInfo.packageName;
+            if (p.equals("com.sec.android.app.sbrowser")) { targetPkg = p; break; }
+            if (p.equals("com.android.chrome") && targetPkg == null) { targetPkg = p; }
         }
-        if (best != null) {
-            openIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
+        // If neither found, use the first handler
+        if (targetPkg == null && !handlers.isEmpty()) {
+            targetPkg = handlers.get(0).activityInfo.packageName;
+        }
+
+        if (targetPkg != null) {
+            openIntent.setPackage(targetPkg);
         }
 
         PendingIntent pending = PendingIntent.getActivity(context, 0, openIntent,
