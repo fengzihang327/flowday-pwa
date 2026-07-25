@@ -1,8 +1,13 @@
 package com.flowday.widget;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Minimal settings/info activity.
@@ -18,6 +23,18 @@ public class SettingsActivity extends Activity {
 
         // Start the local server
         LocalServerService.start(this);
+
+        // Request exact alarm permission for reliable notifications
+        AlarmManager am = getSystemService(AlarmManager.class);
+        if (am != null && !am.canScheduleExactAlarms()) {
+            try {
+                Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                startActivity(intent);
+                Toast.makeText(this, "请允许精确闹钟以接收任务提醒", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Toast.makeText(this, "请在设置中允许闹钟权限", Toast.LENGTH_LONG).show();
+            }
+        }
 
         TextView statusText = findViewById(R.id.status_text);
         statusText.setText(

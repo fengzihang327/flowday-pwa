@@ -149,6 +149,9 @@ public class LocalServerService extends Service {
                 // Update widget
                 FlowdayWidget.updateAllWidgets(this);
 
+                // Schedule notifications via AlarmManager
+                NotificationReceiver.scheduleAlarms(this, body);
+
                 response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n" +
                         "Access-Control-Allow-Origin: *\r\n\r\nOK";
                 Log.i(TAG, "Widget updated with " + body.length() + " bytes");
