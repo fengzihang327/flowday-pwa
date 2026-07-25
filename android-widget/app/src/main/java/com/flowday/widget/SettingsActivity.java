@@ -22,10 +22,18 @@ public class SettingsActivity extends Activity {
         TextView statusText = findViewById(R.id.status_text);
         statusText.setText(
                 "✅ Flowday 小组件已就绪\n\n" +
-                "▸ 在桌面添加小组件：长按桌面 → 小组件 → Flowday\n" +
-                "▸ 打开 Flowday PWA 添加任务，数据自动同步\n" +
-                "▸ 同步地址：localhost:18765\n\n" +
-                "提示：首次使用需先打开一次此页面以启动同步服务。"
+                "===== 安装 PWA =====\n" +
+                "1. Samsung Internet 打开:\n" +
+                "   fengzihang327.github.io/flowday-pwa/\n" +
+                "2. 地址栏 → 添加到主屏幕\n\n" +
+                "===== 通知提醒 =====\n" +
+                "1. 设置 → 应用程序 → Flowday\n" +
+                "2. 电池 → 不受限制\n" +
+                "3. 通知 → 允许\n\n" +
+                "===== 小组件 =====\n" +
+                "长按桌面 → 小组件 → Flowday\n" +
+                "点击小组件打开 PWA\n\n" +
+                "同步服务: localhost:18765"
         );
     }
 }

@@ -163,6 +163,7 @@ public class FlowdayWidget extends AppWidgetProvider {
 
         Intent openIntent = new Intent(Intent.ACTION_VIEW,
                 Uri.parse("https://fengzihang327.github.io/flowday-pwa/time-planner.html"));
+        openIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pending = PendingIntent.getActivity(context, 0, openIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.widget_root, pending);
