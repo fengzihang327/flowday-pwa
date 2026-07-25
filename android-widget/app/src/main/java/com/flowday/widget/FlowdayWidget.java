@@ -161,9 +161,22 @@ public class FlowdayWidget extends AppWidgetProvider {
             views.setInt(R.id.w_empty, "setVisibility", android.view.View.VISIBLE);
         }
 
-        Intent openIntent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("https://fengzihang327.github.io/flowday-pwa/time-planner.html"));
+        String pwaUrl = "https://fengzihang327.github.io/flowday-pwa/time-planner.html";
+        Intent openIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pwaUrl));
         openIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        // Find the best handler — prefer Samsung Internet or Chrome for PWA launch
+        android.content.pm.PackageManager pm = context.getPackageManager();
+        android.content.pm.ResolveInfo best = null;
+        for (android.content.pm.ResolveInfo ri : pm.queryIntentActivities(openIntent, 0)) {
+            String pkg = ri.activityInfo.packageName;
+            if (pkg.equals("com.sec.android.app.sbrowser")) { best = ri; break; }
+            if (pkg.equals("com.android.chrome") && best == null) { best = ri; }
+        }
+        if (best != null) {
+            openIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
+        }
+
         PendingIntent pending = PendingIntent.getActivity(context, 0, openIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.widget_root, pending);
